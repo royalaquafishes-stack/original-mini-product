@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Aqua Fishes - Delivery Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdfa; /* Light teal/aqua background */
+            margin: 0;
+            padding: 0;
+            color: #1e293b;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .hidden { display: none !important; }
+        
+        /* Custom File Input Styling */
+        input[type="file"]::file-selector-button {
+            border: none;
+            background: #0ea5e9;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: background .2s ease-in-out;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background: #0284c7;
+        }
+
+        /* Toast Notifications */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.3s forwards;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast.success { background-color: #10b981; }
+        .toast.error { background-color: #ef4444; }
+        .toast.info { background-color: #3b82f6; }
+        
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center p-4 sm:p-6">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Main App Container -->
+    <div class="w-full max-w-md mx-auto relative mt-2 sm:mt-10">
+        
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-cyan-100 text-cyan-600 mb-3 shadow-inner">
+                <i class="fa-solid fa-fish-fins text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-800">Royal Aqua Fishes</h1>
+            <p id="page-subtitle" class="text-slate-500 font-medium mt-1">Delivery Portal</p>
+        </div>
+
+        <!-- LOADING SPINNER -->
+        <div id="loader" class="flex flex-col items-center justify-center py-10 glass-panel rounded-2xl">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mb-4"></div>
+            <p class="text-slate-500">Connecting to database...</p>
+        </div>
+
+        <!-- ================= DELIVERY PORTAL VIEW ================= -->
+        <div id="view-delivery" class="hidden w-full">
+            
+            <!-- Step 1: Mobile Number Search -->
+            <div id="delivery-step-1" class="glass-panel p-6 rounded-2xl">
+                <h2 class="text-lg font-semibold mb-4 text-slate-700">Find Order</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-600 mb-1">Customer Mobile No.</label>
+                    <input type="tel" id="search-mobile" placeholder="Enter mobile number" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition shadow-sm">
+                </div>
+                <button onclick="searchOrder()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                    <span>Continue</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Step 2: Order Details & Confirmation -->
+            <div id="delivery-step-2" class="hidden glass-panel p-6 rounded-2xl">
+                <button onclick="backToSearch()" class="text-cyan-600 text-sm font-medium mb-4 flex items-center gap-1 hover:text-cyan-800">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                
+                <h2 class="text-lg font-semibold mb-4 text-slate-700 border-b pb-2">Order Details</h2>
+                
+                <div class="bg-slate-50 p-4 rounded-xl mb-5 text-sm space-y-2 border border-slate-100 shadow-inner">
+                    <p><span class="font-semibold text-slate-500">Order ID:</span> <span id="lbl-order-id" class="font-bold text-slate-800"></span></p>
+                    <p><span class="font-semibold text-slate-500">Items:</span> <span id="lbl-items" class="text-slate-800"></span></p>
+                    <p><span class="font-semibold text-slate-500">Address:</span> <span id="lbl-address" class="text-slate-800"></span></p>
+                    <p><span class="font-semibold text-slate-500">Amount:</span> <span id="lbl-amount" class="text-slate-800 font-bold text-green-600"></span></p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Verification OTP / Last 4 of Order ID</label>
+                        <input type="text" id="verify-otp" placeholder="e.g. 12BA" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 uppercase font-mono tracking-widest text-center text-lg">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Delivery Proof (Photo)</label>
+                        <div class="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center hover:bg-slate-50 transition cursor-pointer relative">
+                            <input type="file" id="delivery-photo" accept="image/*" capture="environment" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewImage(event)">
+                            <div id="photo-placeholder" class="text-slate-500">
+                                <i class="fa-solid fa-camera text-2xl mb-2"></i>
+                                <p class="text-sm">Tap to take a photo or upload</p>
+                            </div>
+                            <img id="photo-preview" class="hidden max-h-32 mx-auto rounded-lg shadow-sm" />
+                        </div>
+                    </div>
+
+                    <button onclick="confirmDelivery()" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition shadow-md mt-4 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-check-circle"></i> <span>Confirm Delivery</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Success Screen -->
+            <div id="delivery-step-3" class="hidden glass-panel p-8 rounded-2xl text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 text-green-500 mb-4">
+                    <i class="fa-solid fa-check text-4xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Delivery Successful!</h2>
+                <p class="text-slate-500 mb-6">The order has been marked as delivered safely.</p>
+                <button onclick="backToSearch()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 rounded-xl transition shadow-md">
+                    Deliver Another Order
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= ADMIN PORTAL VIEW ================= -->
+        <div id="view-admin" class="hidden w-full max-w-3xl mx-auto" style="max-width: 800px;">
+            
+            <!-- Admin Login -->
+            <div id="admin-login" class="glass-panel p-6 rounded-2xl max-w-md mx-auto">
+                <div class="text-center mb-6">
+                    <i class="fa-solid fa-user-shield text-4xl text-slate-700 mb-2"></i>
+                    <h2 class="text-xl font-bold text-slate-800">Admin Authentication</h2>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-600 mb-1">Passcode</label>
+                    <input type="password" id="admin-pass" placeholder="Enter Admin Passcode" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-700 text-center tracking-widest">
+                </div>
+                <button onclick="loginAdmin()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-3 rounded-xl transition shadow-md">
+                    Access Admin Panel
+                </button>
+            </div>
+
+            <!-- Admin Dashboard -->
+            <div id="admin-dashboard" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-slate-800"><i class="fa-solid fa-gauge-high mr-2"></i>Dashboard</h2>
+                    <button onclick="logoutAdmin()" class="text-sm bg-red-100 hover:bg-red-200 text-red-600 px-4 py-2 rounded-lg font-medium transition">Logout</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Create Order Form -->
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h3 class="text-lg font-bold text-slate-700 mb-4 border-b pb-2"><i class="fa-solid fa-plus-circle mr-2"></i>Create New Order</h3>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase">Customer Mobile</label>
+                                <input type="tel" id="new-mobile" class="w-full px-3 py-2 mt-1 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase">Fish Details / Items</label>
+                                <input type="text" id="new-items" placeholder="e.g. 2x Betta, 1x Guppy Pair" class="w-full px-3 py-2 mt-1 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 uppercase">Delivery Address</label>
+                                <textarea id="new-address" rows="2" class="w-full px-3 py-2 mt-1 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm"></textarea>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="flex-1">
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase">Total Cost (₹)</label>
+                                    <input type="number" id="new-cost" class="w-full px-3 py-2 mt-1 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-xs font-semibold text-slate-500 uppercase">Custom OTP</label>
+                                    <input type="text" id="new-otp" placeholder="(Auto generated if blank)" class="w-full px-3 py-2 mt-1 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm font-mono uppercase">
+                                </div>
+                            </div>
+                            <button onclick="createOrder()" class="w-full mt-4 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 rounded-lg transition shadow-md">
+                                Generate Order
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Order List -->
+                    <div class="glass-panel p-6 rounded-2xl flex flex-col">
+                        <div class="flex justify-between items-center mb-4 border-b pb-2">
+                            <h3 class="text-lg font-bold text-slate-700"><i class="fa-solid fa-list mr-2"></i>Active Orders</h3>
+                            <button onclick="loadAdminOrders()" class="text-cyan-600 hover:text-cyan-800"><i class="fa-solid fa-rotate-right"></i></button>
+                        </div>
+                        
+                        <div id="admin-orders-list" class="flex-1 overflow-y-auto max-h-[400px] space-y-3 pr-2">
+                            <!-- Orders will be populated here -->
+                            <p class="text-slate-400 text-center text-sm mt-10">Loading orders...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration setup from environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'royal-aqua-delivery-app';
+        let app, db, auth;
+        let currentUser = null;
+
+        // Try initializing Firebase
+        try {
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+                // Mock config fallback if environment not present, to prevent immediate crash in standalone, 
+                // though real db calls will fail without valid config.
+                apiKey: "mock-key", projectId: "mock-project"
+            };
+            
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            
+            authenticateFirebase();
+        } catch (error) {
+            console.error("Firebase init error:", error);
+            showToast("Database connection failed. Please check setup.", "error");
+            document.getElementById('loader').innerHTML = '<p class="text-red-500 p-4">Initialization Failed.</p>';
+        }
+
+        async function authenticateFirebase() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    const userCredential = await signInWithCustomToken(auth, __initial_auth_token);
+                    currentUser = userCredential.user;
+                } else {
+                    const userCredential = await signInAnonymously(auth);
+                    currentUser = userCredential.user;
+                }
+                console.log("Authenticated as:", currentUser.uid);
+                
+                // Once authenticated, start the app logic based on routing
+                initApp();
+            } catch (error) {
+                console.error("Auth Error:", error);
+                showToast("Authentication failed.", "error");
+                document.getElementById('loader').innerHTML = '<p class="text-red-500 p-4">Auth Failed.</p>';
+            }
+        }
+
+        // --- GLOBAL APP STATE & VARIABLES ---
+        window.db = db;
+        window.appId = appId;
+        window.getDocs = getDocs;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.updateDoc = updateDoc;
+        window.doc = doc;
+        window.serverTimestamp = serverTimestamp;
+
+        let currentActiveOrder = null;
+        let uploadedPhotoBase64 = null;
+        let allOrdersMemory = [];
+
+        function initApp() {
+            document.getElementById('loader').classList.add('hidden');
+            window.addEventListener('hashchange', router);
+            router(); // Call initially
+        }
+
+        function router() {
+            const hash = window.location.hash;
+            document.getElementById('view-delivery').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('page-subtitle').innerText = "Delivery Portal";
+
+            if (hash === '#raf-admin') {
+                document.getElementById('view-admin').classList.remove('hidden');
+                document.getElementById('page-subtitle').innerText = "Admin Portal";
+                // Check if already logged in via session storage (simple client side check)
+                if(sessionStorage.getItem('raf_admin_auth') === 'true') {
+                    showAdminDashboard();
+                } else {
+                    document.getElementById('admin-login').classList.remove('hidden');
+                    document.getElementById('admin-dashboard').classList.add('hidden');
+                }
+            } else {
+                document.getElementById('view-delivery').classList.remove('hidden');
+                backToSearch();
+            }
+        }
+
+        // --- UTILITY FUNCTIONS ---
+        window.showToast = function(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'fa-info-circle';
+            if(type === 'success') icon = 'fa-check-circle';
+            if(type === 'error') icon = 'fa-exclamation-circle';
+
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        window.generateOrderID = function() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = 'ORD-';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        };
+
+        // --- DELIVERY PORTAL LOGIC ---
+        window.searchOrder = async function() {
+            if(!currentUser) return;
+            const mobile = document.getElementById('search-mobile').value.trim();
+            if(!mobile || mobile.length < 10) {
+                showToast("Please enter a valid mobile number", "error");
+                return;
+            }
+
+            const btn = document.querySelector('#delivery-step-1 button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Searching...';
+            btn.disabled = true;
+
+            try {
+                // Rule 2 & 1 applied: Fetch all from strict public path and filter in memory
+                const ordersRef = collection(window.db, 'artifacts', window.appId, 'public', 'data', 'orders');
+                const snapshot = await getDocs(ordersRef);
+                
+                let foundOrder = null;
+                // Find pending order with matching mobile
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if(data.mobile === mobile && data.status === 'Pending') {
+                        foundOrder = { id: doc.id, ...data };
+                    }
+                });
+
+                if(foundOrder) {
+                    currentActiveOrder = foundOrder;
+                    showDeliveryStep2(foundOrder);
+                } else {
+                    showToast("No pending order found for this number.", "error");
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                showToast("Error searching database.", "error");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        window.showDeliveryStep2 = function(order) {
+            document.getElementById('delivery-step-1').classList.add('hidden');
+            document.getElementById('delivery-step-2').classList.remove('hidden');
+            
+            document.getElementById('lbl-order-id').innerText = order.orderId;
+            document.getElementById('lbl-items').innerText = order.items;
+            document.getElementById('lbl-address').innerText = order.address;
+            document.getElementById('lbl-amount').innerText = "₹" + order.cost;
+            
+            // reset inputs
+            document.getElementById('verify-otp').value = '';
+            document.getElementById('delivery-photo').value = '';
+            document.getElementById('photo-preview').classList.add('hidden');
+            document.getElementById('photo-placeholder').classList.remove('hidden');
+            uploadedPhotoBase64 = null;
+        };
+
+        window.backToSearch = function() {
+            currentActiveOrder = null;
+            document.getElementById('delivery-step-1').classList.remove('hidden');
+            document.getElementById('delivery-step-2').classList.add('hidden');
+            document.getElementById('delivery-step-3').classList.add('hidden');
+            document.getElementById('search-mobile').value = '';
+        };
+
+        window.previewImage = function(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+
+            // Compress image to Base64 to save in Firestore (safe under 1MB limit)
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Max width 500px for basic proof
+                    const MAX_WIDTH = 500;
+                    let scaleSize = 1;
+                    if(img.width > MAX_WIDTH) {
+                        scaleSize = MAX_WIDTH / img.width;
+                    }
+                    
+                    canvas.width = img.width * scaleSize;
+                    canvas.height = img.height * scaleSize;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    uploadedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.5); // 50% quality
+                    
+                    // Show preview
+                    const preview = document.getElementById('photo-preview');
+                    preview.src = uploadedPhotoBase64;
+                    preview.classList.remove('hidden');
+                    document.getElementById('photo-placeholder').classList.add('hidden');
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        };
+
+        window.confirmDelivery = async function() {
+            if(!currentUser || !currentActiveOrder) return;
+            
+            const inputOtp = document.getElementById('verify-otp').value.trim().toUpperCase();
+            if(!inputOtp) {
+                showToast("Please enter OTP or Last 4 digits of Order ID.", "error");
+                return;
+            }
+
+            if(!uploadedPhotoBase64) {
+                showToast("Please upload a delivery proof photo.", "error");
+                return;
+            }
+
+            // Validation: Check if input matches custom OTP or last 4 of Order ID
+            const last4OrderId = currentActiveOrder.orderId.slice(-4).toUpperCase();
+            const expectedOtp = currentActiveOrder.otp ? currentActiveOrder.otp.toUpperCase() : last4OrderId;
+
+            if(inputOtp !== expectedOtp && inputOtp !== last4OrderId) {
+                showToast("Invalid Verification Code!", "error");
+                return;
+            }
+
+            // Proceed to update Firestore
+            const btn = document.querySelector('#delivery-step-2 button.bg-green-500');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Confirming...';
+            btn.disabled = true;
+
+            try {
+                const orderDocRef = doc(window.db, 'artifacts', window.appId, 'public', 'data', 'orders', currentActiveOrder.id);
+                await window.updateDoc(orderDocRef, {
+                    status: 'Delivered',
+                    deliveryPhoto: uploadedPhotoBase64,
+                    deliveredAt: window.serverTimestamp()
+                });
+
+                showToast("Delivery Confirmed Successfully!", "success");
+                
+                // Show Success Step
+                document.getElementById('delivery-step-2').classList.add('hidden');
+                document.getElementById('delivery-step-3').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error("Update error:", error);
+                showToast("Failed to confirm delivery.", "error");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+
+
+        // --- ADMIN PORTAL LOGIC ---
+        window.loginAdmin = function() {
+            const pass = document.getElementById('admin-pass').value;
+            if(pass === '00/8/12BA') {
+                sessionStorage.setItem('raf_admin_auth', 'true');
+                showToast("Login Successful", "success");
+                document.getElementById('admin-pass').value = '';
+                showAdminDashboard();
+            } else {
+                showToast("Invalid Passcode", "error");
+            }
+        };
+
+        window.logoutAdmin = function() {
+            sessionStorage.removeItem('raf_admin_auth');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('admin-login').classList.remove('hidden');
+            showToast("Logged out.", "info");
+        };
+
+        window.showAdminDashboard = function() {
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            loadAdminOrders();
+        };
+
+        window.createOrder = async function() {
+            if(!currentUser) {
+                showToast("Auth error. Cannot create.", "error");
+                return;
+            }
+
+            const mobile = document.getElementById('new-mobile').value.trim();
+            const items = document.getElementById('new-items').value.trim();
+            const address = document.getElementById('new-address').value.trim();
+            const cost = document.getElementById('new-cost').value.trim();
+            let otp = document.getElementById('new-otp').value.trim().toUpperCase();
+
+            if(!mobile || !items || !address || !cost) {
+                showToast("Please fill all required fields.", "error");
+                return;
+            }
+
+            const orderId = generateOrderID();
+            
+            // If OTP is blank, let it rely on last 4 of order ID. Otherwise store custom.
+            if(!otp) {
+                otp = orderId.slice(-4);
+            }
+
+            try {
+                const ordersRef = collection(window.db, 'artifacts', window.appId, 'public', 'data', 'orders');
+                await window.addDoc(ordersRef, {
+                    orderId: orderId,
+                    mobile: mobile,
+                    items: items,
+                    address: address,
+                    cost: Number(cost),
+                    otp: otp,
+                    status: 'Pending',
+                    createdAt: window.serverTimestamp()
+                });
+
+                showToast("Order Created Successfully! ID: " + orderId, "success");
+                
+                // Clear form
+                document.getElementById('new-mobile').value = '';
+                document.getElementById('new-items').value = '';
+                document.getElementById('new-address').value = '';
+                document.getElementById('new-cost').value = '';
+                document.getElementById('new-otp').value = '';
+
+                // Reload list
+                loadAdminOrders();
+            } catch (error) {
+                console.error("Create order error:", error);
+                showToast("Failed to create order.", "error");
+            }
+        };
+
+        window.loadAdminOrders = async function() {
+            if(!currentUser) return;
+            const container = document.getElementById('admin-orders-list');
+            container.innerHTML = '<p class="text-slate-400 text-center text-sm mt-4"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</p>';
+
+            try {
+                const ordersRef = collection(window.db, 'artifacts', window.appId, 'public', 'data', 'orders');
+                const snapshot = await getDocs(ordersRef);
+                
+                let orders = [];
+                snapshot.forEach(doc => {
+                    orders.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort purely in memory (Newest first ideally, but we don't have perfect timestamps without serverTimestamp resolution on initial local pull, so we sort simple)
+                orders.sort((a, b) => {
+                    // Quick sort by status: Pending first, then Delivered
+                    if(a.status === 'Pending' && b.status === 'Delivered') return -1;
+                    if(a.status === 'Delivered' && b.status === 'Pending') return 1;
+                    return 0;
+                });
+
+                if(orders.length === 0) {
+                    container.innerHTML = '<p class="text-slate-400 text-center text-sm mt-4">No orders found.</p>';
+                    return;
+                }
+
+                let html = '';
+                orders.forEach(o => {
+                    const statusColor = o.status === 'Pending' ? 'bg-orange-100 text-orange-700 border-orange-200' : 'bg-green-100 text-green-700 border-green-200';
+                    const last4 = o.orderId.slice(-4);
+                    
+                    html += `
+                    <div class="border border-slate-100 bg-white p-3 rounded-xl shadow-sm text-sm relative">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <span class="font-bold text-slate-700">${o.orderId}</span>
+                                <span class="text-xs text-slate-400 ml-2">Mob: ${o.mobile}</span>
+                            </div>
+                            <span class="px-2 py-1 rounded-md text-xs font-bold border ${statusColor}">${o.status}</span>
+                        </div>
+                        <p class="text-slate-600 mb-1"><i class="fa-solid fa-fish fa-sm text-cyan-500 w-4"></i> ${o.items}</p>
+                        <div class="flex justify-between items-end mt-2 pt-2 border-t border-slate-50">
+                            <div>
+                                <p class="text-xs text-slate-500">OTP/Key: <span class="font-mono font-bold text-slate-700 bg-slate-100 px-1 rounded">${o.otp || last4}</span></p>
+                            </div>
+                            <span class="font-bold text-slate-800">₹${o.cost}</span>
+                        </div>
+                    </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error("Error loading admin orders:", error);
+                container.innerHTML = '<p class="text-red-500 text-center text-sm mt-4">Failed to load data.</p>';
+            }
+        };
+
+    </script>
+</body>
+</html>
