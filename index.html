@@ -22,6 +22,10 @@
         #chat-widget { transition: all 0.3s ease; }
         .chat-open { transform: translateY(0); opacity: 1; pointer-events: all; }
         .chat-closed { transform: translateY(20px); opacity: 0; pointer-events: none; }
+
+        /* Custom Brand Color */
+        .bg-brand { background-color: #2874f0; }
+        .text-brand { color: #2874f0; }
     </style>
 </head>
 <body>
@@ -29,100 +33,144 @@
     <!-- ==================== USER STOREFRONT ==================== -->
     <div id="store-app" class="view-section active">
         <!-- Header -->
-        <header class="bg-blue-600 text-white sticky top-0 z-50 shadow-md">
+        <header class="bg-brand text-white sticky top-0 z-50 shadow-md">
             <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
                 <!-- Logo -->
-                <div class="flex items-center gap-2 cursor-pointer" onclick="window.location.hash=''">
+                <div id="logo-container" class="flex items-center gap-2 cursor-pointer select-none">
                     <img id="site-logo" src="https://via.placeholder.com/40" alt="Logo" class="h-10 w-10 object-contain bg-white rounded">
-                    <span class="font-bold text-xl italic tracking-wide">Original Mini Product</span>
+                    <span class="font-bold text-xl italic tracking-wide hidden sm:block">Original Mini Product</span>
                 </div>
                 
                 <!-- Search -->
-                <div class="flex-1 hidden md:block max-w-2xl relative">
-                    <input type="text" id="search-input" placeholder="Product, brand aur aro onek kichu khojun..." class="w-full text-black px-4 py-2 rounded-sm focus:outline-none shadow-sm">
-                    <button class="absolute right-0 top-0 h-full px-4 text-blue-600 hover:bg-gray-100 rounded-r-sm"><i class="fas fa-search"></i></button>
+                <div class="flex-1 max-w-2xl relative">
+                    <input type="text" id="search-input" placeholder="Search for products, brands and more..." class="w-full text-black px-4 py-2 rounded-sm focus:outline-none shadow-sm">
+                    <button class="absolute right-0 top-0 h-full px-5 text-brand bg-white border-l hover:bg-gray-100 rounded-r-sm font-semibold">Search</button>
                 </div>
 
                 <!-- Nav Icons -->
-                <div class="flex items-center gap-6">
+                <div class="flex items-center gap-4 sm:gap-6 text-sm sm:text-base">
                     <div id="auth-btn-container" class="cursor-pointer font-semibold flex items-center gap-1 hover:text-gray-200">
-                        <i class="fas fa-user"></i> <span id="auth-text">Log In</span>
+                        <i class="far fa-user"></i> <span id="auth-text" class="hidden sm:inline">Login</span>
+                    </div>
+                    <div class="cursor-pointer font-semibold flex items-center gap-1 hover:text-gray-200" onclick="window.location.hash='#orders'">
+                        <i class="fas fa-box"></i> <span class="hidden sm:inline">Orders</span>
                     </div>
                     <div class="cursor-pointer font-semibold flex items-center gap-1 hover:text-gray-200" onclick="window.location.hash='#wishlist'">
-                        <i class="fas fa-heart"></i> <span>Wishlist</span>
+                        <i class="far fa-heart"></i> <span class="hidden sm:inline">Wishlist</span>
                     </div>
                     <div class="cursor-pointer font-semibold flex items-center gap-1 hover:text-gray-200 relative" onclick="window.location.hash='#cart'">
-                        <i class="fas fa-shopping-cart"></i> <span>Cart</span>
-                        <span id="cart-count" class="absolute -top-2 -right-3 bg-yellow-400 text-black text-xs font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                        <i class="fas fa-shopping-cart"></i> <span class="hidden sm:inline">Cart</span>
+                        <span id="cart-count" class="absolute -top-2 -right-2 sm:-right-3 bg-yellow-400 text-black text-xs font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Categories (Mock) -->
+        <!-- Categories Nav -->
         <div class="bg-white shadow-sm border-b overflow-x-auto hide-scrollbar">
             <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between min-w-max text-sm font-semibold text-gray-700">
-                <div class="cursor-pointer hover:text-blue-600">Home</div>
-                <div class="cursor-pointer hover:text-blue-600">Electronics</div>
-                <div class="cursor-pointer hover:text-blue-600">Fashion</div>
-                <div class="cursor-pointer hover:text-blue-600">Home & Kitchen</div>
-                <div class="cursor-pointer hover:text-blue-600">Beauty</div>
-                <div class="cursor-pointer hover:text-blue-600">Toys & Games</div>
-                <div class="cursor-pointer hover:text-blue-600">Sports</div>
-                <div class="cursor-pointer hover:text-blue-600">Books</div>
+                <div class="cursor-pointer hover:text-brand flex items-center gap-1"><i class="fas fa-bars"></i> All Categories</div>
+                <div class="cursor-pointer hover:text-brand" onclick="window.location.hash=''">Home</div>
+                <div class="cursor-pointer hover:text-brand">Electronics</div>
+                <div class="cursor-pointer hover:text-brand">Fashion</div>
+                <div class="cursor-pointer hover:text-brand">Home & Kitchen</div>
+                <div class="cursor-pointer hover:text-brand">Beauty</div>
+                <div class="cursor-pointer hover:text-brand">Toys & Games</div>
+                <div class="cursor-pointer hover:text-brand">Sports</div>
+                <div class="cursor-pointer hover:text-brand">Books</div>
+                <div class="cursor-pointer hover:text-brand text-brand"><i class="fas fa-store"></i> Become a Seller</div>
             </div>
         </div>
 
         <!-- Main Content Area -->
-        <main class="max-w-7xl mx-auto px-4 py-6" id="main-content">
+        <main class="max-w-7xl mx-auto px-2 sm:px-4 py-6" id="main-content">
             
             <!-- HOME VIEW -->
             <div id="view-home" class="page-view block">
                 <!-- Banners Carousel -->
-                <div class="relative rounded-md overflow-hidden mb-8 group bg-white shadow-sm">
-                    <div id="banner-container" class="carousel-container hide-scrollbar h-48 md:h-80 bg-gray-200">
+                <div class="relative rounded-md overflow-hidden mb-6 group bg-white shadow-sm">
+                    <div id="banner-container" class="carousel-container hide-scrollbar h-40 sm:h-64 md:h-80 bg-gray-200">
                         <!-- Banners will be injected here -->
-                        <div class="flex items-center justify-center w-full h-full text-gray-500">Banner loading...</div>
+                        <div class="flex items-center justify-center w-full h-full text-gray-500">Loading Banners...</div>
                     </div>
-                    <!-- Carousel Controls -->
-                    <button id="prev-banner" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white text-black p-2 rounded-full shadow hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition"><i class="fas fa-chevron-left"></i></button>
-                    <button id="next-banner" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white text-black p-2 rounded-full shadow hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition"><i class="fas fa-chevron-right"></i></button>
+                    <button id="prev-banner" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white text-black w-8 h-10 rounded shadow hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition"><i class="fas fa-chevron-left"></i></button>
+                    <button id="next-banner" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white text-black w-8 h-10 rounded shadow hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition"><i class="fas fa-chevron-right"></i></button>
                 </div>
 
-                <h2 class="text-2xl font-bold mb-4 text-gray-800">Best of Original Mini Product</h2>
+                <!-- Circular Categories -->
+                <div class="flex overflow-x-auto hide-scrollbar gap-4 mb-8 pb-2">
+                    <div class="flex flex-col items-center min-w-[80px] cursor-pointer hover:text-brand">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center shadow-sm mb-2"><i class="fas fa-mobile-alt text-2xl text-gray-600"></i></div>
+                        <span class="text-xs font-semibold">Mobiles</span>
+                    </div>
+                    <div class="flex flex-col items-center min-w-[80px] cursor-pointer hover:text-brand">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center shadow-sm mb-2"><i class="fas fa-headphones text-2xl text-gray-600"></i></div>
+                        <span class="text-xs font-semibold">Electronics</span>
+                    </div>
+                    <div class="flex flex-col items-center min-w-[80px] cursor-pointer hover:text-brand">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center shadow-sm mb-2"><i class="fas fa-tshirt text-2xl text-gray-600"></i></div>
+                        <span class="text-xs font-semibold">Fashion</span>
+                    </div>
+                    <div class="flex flex-col items-center min-w-[80px] cursor-pointer hover:text-brand">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center shadow-sm mb-2"><i class="fas fa-blender text-2xl text-gray-600"></i></div>
+                        <span class="text-xs font-semibold">Home</span>
+                    </div>
+                    <div class="flex flex-col items-center min-w-[80px] cursor-pointer hover:text-brand">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center shadow-sm mb-2"><i class="fas fa-spray-can text-2xl text-gray-600"></i></div>
+                        <span class="text-xs font-semibold">Beauty</span>
+                    </div>
+                    <div class="flex flex-col items-center min-w-[80px] cursor-pointer hover:text-brand">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center shadow-sm mb-2"><i class="fas fa-gamepad text-2xl text-gray-600"></i></div>
+                        <span class="text-xs font-semibold">Toys</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Best of Original Mini Product</h2>
+                    <button class="bg-brand text-white px-4 py-1 rounded text-sm font-semibold shadow">View All</button>
+                </div>
                 
                 <!-- Product Grid -->
-                <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                     <!-- Products will be injected here -->
-                    <p class="col-span-full text-center py-10 text-gray-500">Products loading hocche...</p>
+                    <p class="col-span-full text-center py-10 text-gray-500">Loading Products...</p>
                 </div>
             </div>
 
             <!-- PRODUCT DETAILS VIEW -->
             <div id="view-product-details" class="page-view hidden">
-                <div class="bg-white p-4 rounded shadow-sm flex flex-col md:flex-row gap-8 relative">
-                    <button onclick="window.history.back()" class="absolute top-2 right-4 text-gray-500 hover:text-black"><i class="fas fa-times text-xl"></i></button>
+                <div class="bg-white p-4 sm:p-6 rounded shadow-sm flex flex-col md:flex-row gap-8 relative">
+                    <button onclick="window.location.hash=''" class="absolute top-2 right-4 text-gray-400 hover:text-black"><i class="fas fa-times text-2xl"></i></button>
                     
                     <!-- Left Images -->
-                    <div class="w-full md:w-2/5 flex flex-col-reverse md:flex-row gap-4">
-                        <div id="pd-thumbnails" class="flex md:flex-col gap-2 overflow-auto hide-scrollbar">
+                    <div class="w-full md:w-2/5 flex flex-col gap-4">
+                        <div class="border rounded relative flex items-center justify-center bg-white p-4 h-80 sm:h-96">
+                            <img id="pd-main-img" src="" alt="Product" class="max-w-full max-h-full object-contain">
+                            <button id="pd-wishlist-icon" class="absolute top-3 right-3 text-2xl text-gray-300 hover:text-red-500 transition"><i class="fas fa-heart"></i></button>
+                        </div>
+                        <div id="pd-thumbnails" class="flex gap-2 overflow-x-auto hide-scrollbar py-2">
                             <!-- Thumbnails -->
                         </div>
-                        <div class="flex-1 border rounded relative overflow-hidden flex items-center justify-center bg-white p-2">
-                            <img id="pd-main-img" src="" alt="Product" class="max-w-full max-h-96 object-contain">
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2 sm:gap-4 mt-2">
+                            <button id="pd-btn-cart" class="flex-1 bg-[#ff9f00] hover:bg-orange-500 text-white font-bold py-3 sm:py-4 rounded shadow text-sm sm:text-base uppercase"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            <button id="pd-btn-buy" class="flex-1 bg-[#fb641b] hover:bg-orange-600 text-white font-bold py-3 sm:py-4 rounded shadow text-sm sm:text-base uppercase"><i class="fas fa-bolt"></i> Buy Now</button>
                         </div>
                     </div>
                     
                     <!-- Right Details -->
                     <div class="w-full md:w-3/5 space-y-4">
-                        <p id="pd-category" class="text-sm text-gray-500 font-semibold uppercase tracking-wider"></p>
-                        <h1 id="pd-title" class="text-2xl font-bold text-gray-800"></h1>
+                        <div class="text-sm text-gray-500 flex gap-2">
+                            <span class="hover:text-brand cursor-pointer">Home</span> > 
+                            <span id="pd-category" class="hover:text-brand cursor-pointer uppercase"></span>
+                        </div>
+                        <h1 id="pd-title" class="text-xl sm:text-2xl font-normal text-gray-800"></h1>
                         
                         <!-- Badges & Ratings -->
                         <div class="flex items-center gap-3 text-sm">
-                            <span class="bg-green-600 text-white px-2 py-0.5 rounded font-bold">4.5 <i class="fas fa-star text-xs"></i></span>
-                            <span class="text-gray-500">2,431 Ratings & Reviews</span>
-                            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png" class="h-5" alt="Assured">
+                            <span class="bg-green-600 text-white px-2 py-0.5 rounded font-bold flex items-center gap-1">4.4 <i class="fas fa-star text-xs"></i></span>
+                            <span class="text-gray-500 font-semibold">12,682 Ratings & 2,431 Reviews</span>
+                            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png" class="h-5 ml-2" alt="Assured">
                         </div>
 
                         <!-- Price -->
@@ -133,21 +181,58 @@
                         </div>
                         <p class="text-sm text-gray-500">Inclusive of all taxes</p>
 
+                        <div class="flex items-center gap-2 text-sm font-semibold mt-4">
+                            <i class="fas fa-tag text-green-600"></i> Bank Offer: 10% Instant Discount on SBI Credit Cards
+                        </div>
+
                         <!-- Stock Status -->
-                        <div id="pd-stock-status" class="font-bold py-2"></div>
+                        <div id="pd-stock-status" class="font-bold py-2 text-lg"></div>
 
-                        <!-- Action Buttons -->
-                        <div class="flex gap-4 pt-4">
-                            <button id="pd-btn-cart" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded shadow uppercase"><i class="fas fa-shopping-cart"></i> Cart e Jog Korun</button>
-                            <button id="pd-btn-buy" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded shadow uppercase"><i class="fas fa-bolt"></i> Ekhoni Kinun</button>
+                        <!-- Highlights -->
+                        <div class="pt-6 mt-6 border-t flex flex-col sm:flex-row gap-6">
+                            <div class="w-full sm:w-1/2">
+                                <h3 class="text-gray-500 font-semibold mb-2">Highlights</h3>
+                                <ul class="list-disc pl-5 text-sm space-y-2 text-gray-800" id="pd-highlights">
+                                    <li>30dB Active Noise Cancellation</li>
+                                    <li>40 Hours Total Playback</li>
+                                    <li>Bluetooth 5.3 Connectivity</li>
+                                    <li>IPX5 Water Resistant</li>
+                                </ul>
+                            </div>
+                            <div class="w-full sm:w-1/2">
+                                <h3 class="text-gray-500 font-semibold mb-2">Description</h3>
+                                <p id="pd-description" class="text-gray-700 text-sm whitespace-pre-wrap"></p>
+                            </div>
                         </div>
-                        <button id="pd-btn-wishlist" class="w-full border border-gray-300 hover:bg-gray-50 font-semibold py-3 rounded mt-2"><i class="far fa-heart"></i> Wishlist e Add Korun</button>
 
-                        <!-- Description -->
+                        <!-- Reviews Section -->
                         <div class="pt-6 mt-6 border-t">
-                            <h3 class="font-bold text-lg mb-2">Highlights</h3>
-                            <p id="pd-description" class="text-gray-700 text-sm whitespace-pre-wrap"></p>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-2xl font-bold text-gray-800">Ratings & Reviews</h3>
+                                <button class="bg-white border border-gray-300 shadow-sm px-4 py-2 rounded font-semibold text-sm">Rate Product</button>
+                            </div>
+                            <div class="flex items-center gap-4 mb-6">
+                                 <div class="text-4xl font-normal">4.4<i class="fas fa-star text-2xl text-gray-300 ml-1"></i></div>
+                                 <div class="text-gray-500 text-sm">12,682 Ratings &<br>2,431 Reviews</div>
+                            </div>
+                            <div class="space-y-4">
+                                 <div class="border-b pb-4">
+                                     <div class="flex items-center gap-2 mb-2"><span class="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1">5 <i class="fas fa-star text-[10px]"></i></span> <span class="font-bold text-sm">Awesome Product!</span></div>
+                                     <p class="text-gray-800 text-sm">Really loved the build quality and sound. Highly recommended for this price range.</p>
+                                     <div class="flex items-center gap-2 mt-2 text-xs text-gray-400 font-semibold">
+                                        <span>John Doe</span> <i class="fas fa-check-circle text-gray-300"></i> <span>Certified Buyer</span> <span>2 days ago</span>
+                                     </div>
+                                 </div>
+                                 <div class="border-b pb-4">
+                                     <div class="flex items-center gap-2 mb-2"><span class="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1">4 <i class="fas fa-star text-[10px]"></i></span> <span class="font-bold text-sm">Value for money</span></div>
+                                     <p class="text-gray-800 text-sm">Bass is good. ANC works fine indoors. Battery backup is amazing.</p>
+                                     <div class="flex items-center gap-2 mt-2 text-xs text-gray-400 font-semibold">
+                                        <span>Amit Singh</span> <i class="fas fa-check-circle text-gray-300"></i> <span>Certified Buyer</span> <span>1 week ago</span>
+                                     </div>
+                                 </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -156,46 +241,126 @@
             <div id="view-cart" class="page-view hidden">
                 <div class="flex flex-col lg:flex-row gap-6">
                     <div class="w-full lg:w-2/3 bg-white shadow-sm rounded">
-                        <div class="p-4 border-b"><h2 class="text-xl font-bold">Amar Cart</h2></div>
-                        <div id="cart-items" class="p-4 space-y-4">
+                        <div class="p-4 border-b flex justify-between items-center">
+                            <h2 class="text-xl font-bold">My Cart</h2>
+                        </div>
+                        <div id="cart-items" class="p-0">
                             <!-- Cart Items -->
                         </div>
-                        <div class="p-4 border-t flex justify-end">
-                            <button id="btn-checkout" class="bg-orange-500 text-white font-bold py-2 px-8 rounded hover:bg-orange-600">Checkout e Jan</button>
+                        <div id="cart-footer" class="p-4 border-t flex justify-end sticky bottom-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+                            <button id="btn-checkout" class="bg-[#fb641b] text-white font-bold py-3 px-10 rounded shadow text-lg">Place Order</button>
                         </div>
                     </div>
-                    <div class="w-full lg:w-1/3 bg-white shadow-sm rounded p-4 h-fit">
-                        <h2 class="text-lg font-bold text-gray-500 border-b pb-2 mb-4 uppercase">Price Details</h2>
-                        <div class="flex justify-between mb-2"><span>Price</span><span id="cart-total-fake">₹0</span></div>
-                        <div class="flex justify-between mb-2 text-green-600"><span>Discount</span><span id="cart-total-discount">-₹0</span></div>
-                        <div class="flex justify-between mb-4"><span>Delivery Charges</span><span class="text-green-600">FREE</span></div>
-                        <div class="flex justify-between border-t border-dashed pt-4 font-bold text-lg"><span>Total Amount</span><span id="cart-total-real">₹0</span></div>
-                        <p class="text-green-600 text-sm font-semibold mt-4">Apni ei order e <span id="cart-savings">₹0</span> save korben!</p>
+                    <div class="w-full lg:w-1/3 bg-white shadow-sm rounded p-0 h-fit sticky top-20">
+                        <h2 class="text-gray-500 font-bold border-b p-4 uppercase">Price Details</h2>
+                        <div class="p-4 space-y-4 text-gray-800 font-semibold">
+                            <div class="flex justify-between"><span>Price (<span id="cart-item-count">0</span> items)</span><span id="cart-total-fake">₹0</span></div>
+                            <div class="flex justify-between text-green-600"><span>Discount</span><span id="cart-total-discount">-₹0</span></div>
+                            <div class="flex justify-between"><span>Delivery Charges</span><span class="text-green-600">Free</span></div>
+                            <div class="flex justify-between border-t border-dashed pt-4 font-bold text-xl text-black"><span>Total Amount</span><span id="cart-total-real">₹0</span></div>
+                            <p class="text-green-600 text-sm font-bold mt-4">You will save <span id="cart-savings">₹0</span> on this order</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- CHECKOUT VIEW -->
-            <div id="view-checkout" class="page-view hidden max-w-2xl mx-auto">
-                <div class="bg-white p-6 rounded shadow-sm">
-                    <h2 class="text-2xl font-bold mb-6 text-blue-600">Checkout - Delivery Details</h2>
-                    <form id="checkout-form" class="space-y-4">
-                        <div><label class="block text-sm font-semibold mb-1">Pura Nam</label><input type="text" id="chk-name" required class="w-full border rounded p-2"></div>
-                        <div><label class="block text-sm font-semibold mb-1">Mobile Number</label><input type="tel" id="chk-phone" required class="w-full border rounded p-2"></div>
-                        <div><label class="block text-sm font-semibold mb-1">Somporno Thikana (Address)</label><textarea id="chk-address" required rows="3" class="w-full border rounded p-2"></textarea></div>
-                        <div class="pt-4 flex justify-between items-center border-t">
-                            <div class="font-bold text-lg">Total Pay: <span id="chk-amount" class="text-blue-600">₹0</span></div>
-                            <button type="submit" class="bg-orange-500 text-white font-bold py-2 px-8 rounded hover:bg-orange-600">Order Place Korun</button>
-                        </div>
-                    </form>
+            <div id="view-checkout" class="page-view hidden max-w-3xl mx-auto">
+                <div class="bg-white rounded shadow-sm overflow-hidden">
+                    <div class="bg-brand text-white p-4 flex items-center gap-3">
+                        <span class="bg-white text-brand w-6 h-6 rounded flex items-center justify-center font-bold text-sm">1</span>
+                        <h2 class="text-lg font-bold">DELIVERY ADDRESS</h2>
+                    </div>
+                    <div class="p-6">
+                        <form id="checkout-form" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div><input type="text" id="chk-fname" placeholder="First Name" required class="w-full border rounded p-3 focus:outline-brand"></div>
+                                <div><input type="text" id="chk-lname" placeholder="Last Name" required class="w-full border rounded p-3 focus:outline-brand"></div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div><input type="tel" id="chk-phone" placeholder="10-digit Mobile Number" pattern="[0-9]{10}" required class="w-full border rounded p-3 focus:outline-brand"></div>
+                                <div>
+                                    <select id="chk-state" required class="w-full border rounded p-3 focus:outline-brand bg-white">
+                                        <option value="" disabled selected>--Select State--</option>
+                                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                        <option value="Assam">Assam</option>
+                                        <option value="Bihar">Bihar</option>
+                                        <option value="Chandigarh">Chandigarh</option>
+                                        <option value="Chhattisgarh">Chhattisgarh</option>
+                                        <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+                                        <option value="Daman and Diu">Daman and Diu</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Goa">Goa</option>
+                                        <option value="Gujarat">Gujarat</option>
+                                        <option value="Haryana">Haryana</option>
+                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                        <option value="Jharkhand">Jharkhand</option>
+                                        <option value="Karnataka">Karnataka</option>
+                                        <option value="Kerala">Kerala</option>
+                                        <option value="Ladakh">Ladakh</option>
+                                        <option value="Lakshadweep">Lakshadweep</option>
+                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                        <option value="Maharashtra">Maharashtra</option>
+                                        <option value="Manipur">Manipur</option>
+                                        <option value="Meghalaya">Meghalaya</option>
+                                        <option value="Mizoram">Mizoram</option>
+                                        <option value="Nagaland">Nagaland</option>
+                                        <option value="Odisha">Odisha</option>
+                                        <option value="Puducherry">Puducherry</option>
+                                        <option value="Punjab">Punjab</option>
+                                        <option value="Rajasthan">Rajasthan</option>
+                                        <option value="Sikkim">Sikkim</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="Telangana">Telangana</option>
+                                        <option value="Tripura">Tripura</option>
+                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                        <option value="Uttarakhand">Uttarakhand</option>
+                                        <option value="West Bengal">West Bengal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div><input type="text" id="chk-pincode" placeholder="Pincode" required pattern="[0-9]{6}" class="w-full border rounded p-3 focus:outline-brand"></div>
+                                <div><input type="text" id="chk-city" placeholder="City/District/Town" required class="w-full border rounded p-3 focus:outline-brand"></div>
+                            </div>
+                            <div>
+                                <textarea id="chk-address" placeholder="Address (Area and Street)" required rows="3" class="w-full border rounded p-3 focus:outline-brand"></textarea>
+                            </div>
+                            
+                            <div class="flex items-center gap-2 mt-2">
+                                <input type="checkbox" id="chk-save-address" class="w-4 h-4 text-brand">
+                                <label for="chk-save-address" class="font-semibold text-gray-700">Save this address for future orders</label>
+                            </div>
+
+                            <div class="pt-6 mt-4 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <div class="font-bold text-xl">Total Amount: <span id="chk-amount" class="text-black">₹0</span></div>
+                                <button type="submit" class="w-full sm:w-auto bg-[#fb641b] text-white font-bold py-3 px-10 rounded shadow text-lg hover:bg-orange-600">CONFIRM ORDER</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
             <!-- WISHLIST VIEW -->
             <div id="view-wishlist" class="page-view hidden">
-                <h2 class="text-2xl font-bold mb-4 bg-white p-4 shadow-sm rounded">Amar Wishlist</h2>
-                <div id="wishlist-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-4 shadow-sm rounded border-b">
+                    <h2 class="text-xl font-bold">My Wishlist (<span id="wishlist-count">0</span>)</h2>
+                </div>
+                <div id="wishlist-grid" class="bg-white grid grid-cols-1 divide-y shadow-sm rounded-b">
                     <!-- Wishlist items -->
+                </div>
+            </div>
+
+            <!-- MY ORDERS VIEW -->
+            <div id="view-orders" class="page-view hidden">
+                <div class="bg-white p-4 shadow-sm rounded border-b mb-4">
+                    <h2 class="text-xl font-bold">My Orders</h2>
+                </div>
+                <div id="user-orders-list" class="space-y-4">
+                    <!-- User Orders -->
                 </div>
             </div>
 
@@ -203,20 +368,20 @@
 
         <!-- Chat Widget -->
         <div class="fixed bottom-4 right-4 z-50">
-            <button id="chat-toggle-btn" class="bg-blue-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-blue-700 transition">
+            <button id="chat-toggle-btn" class="bg-brand text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-blue-700 transition">
                 <i class="fas fa-comment-dots"></i>
             </button>
-            <div id="chat-widget" class="absolute bottom-16 right-0 w-80 bg-white rounded-lg shadow-2xl border flex flex-col chat-closed h-96">
-                <div class="bg-blue-600 text-white p-3 rounded-t-lg font-bold flex justify-between items-center">
-                    <span>Help Support</span>
-                    <button id="chat-close-btn" class="text-white hover:text-gray-200"><i class="fas fa-times"></i></button>
+            <div id="chat-widget" class="absolute bottom-16 right-0 w-80 bg-white rounded-lg shadow-2xl border flex flex-col chat-closed h-96 overflow-hidden">
+                <div class="bg-brand text-white p-3 font-bold flex justify-between items-center">
+                    <div class="flex items-center gap-2"><i class="fas fa-headset text-xl"></i> Help Support</div>
+                    <button id="chat-close-btn" class="text-white hover:text-gray-200 text-xl"><i class="fas fa-times"></i></button>
                 </div>
                 <div id="chat-messages" class="flex-1 p-3 overflow-y-auto bg-gray-50 flex flex-col gap-2 text-sm">
-                    <div class="self-start bg-gray-200 text-black px-3 py-1.5 rounded-lg max-w-[80%]">Namaskar! Apnake kivabe sahajjo korte pari?</div>
+                    <div class="self-start bg-white border text-black px-3 py-2 rounded-lg rounded-tl-none shadow-sm max-w-[80%]">Hello! How can we help you today?</div>
                 </div>
-                <div class="p-2 border-t bg-white flex">
-                    <input type="text" id="chat-input" placeholder="Message likhun..." class="flex-1 border rounded-l px-2 py-1 focus:outline-none">
-                    <button id="chat-send-btn" class="bg-blue-600 text-white px-3 rounded-r hover:bg-blue-700"><i class="fas fa-paper-plane"></i></button>
+                <div class="p-2 border-t bg-gray-100 flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:border-brand">
+                    <button id="chat-send-btn" class="bg-brand text-white w-10 h-10 rounded-full hover:bg-blue-700 shadow flex items-center justify-center"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
@@ -228,23 +393,23 @@
         <!-- Admin Login Modal -->
         <div id="admin-login-overlay" class="fixed inset-0 bg-black bg-opacity-75 z-[100] flex items-center justify-center">
             <div class="bg-white p-6 rounded shadow-lg w-80 text-center">
-                <h2 class="text-xl font-bold mb-4 text-red-600"><i class="fas fa-lock"></i> Admin Area</h2>
-                <input type="password" id="admin-pass-input" placeholder="Password likhun" class="w-full border p-2 mb-4 rounded">
-                <button id="admin-login-btn" class="bg-blue-600 text-white w-full py-2 rounded font-bold">Login</button>
-                <button onclick="window.location.hash=''" class="mt-4 text-sm text-gray-500 underline">Store e ferot jan</button>
+                <h2 class="text-xl font-bold mb-4 text-red-600"><i class="fas fa-user-shield"></i> Admin Login</h2>
+                <input type="password" id="admin-pass-input" placeholder="Enter Password" class="w-full border p-2 mb-4 rounded focus:outline-blue-500">
+                <button id="admin-login-btn" class="bg-blue-600 text-white w-full py-2 rounded font-bold hover:bg-blue-700">Login</button>
+                <button onclick="window.location.hash=''" class="mt-4 text-sm text-gray-500 hover:text-black underline">Return to Store</button>
             </div>
         </div>
 
         <!-- Admin Dashboard -->
         <div id="admin-dashboard" class="hidden flex-1 flex">
             <!-- Sidebar -->
-            <div class="w-64 bg-gray-800 text-white flex flex-col">
-                <div class="p-4 border-b border-gray-700 text-center font-bold text-xl">Admin Panel</div>
-                <div class="flex-1 py-4 flex flex-col gap-2">
-                    <button class="admin-tab-btn active text-left px-4 py-2 bg-gray-700" data-target="admin-products"><i class="fas fa-box w-6"></i> Products</button>
-                    <button class="admin-tab-btn text-left px-4 py-2 hover:bg-gray-700" data-target="admin-orders"><i class="fas fa-shopping-bag w-6"></i> Orders</button>
-                    <button class="admin-tab-btn text-left px-4 py-2 hover:bg-gray-700" data-target="admin-settings"><i class="fas fa-cog w-6"></i> Settings</button>
-                    <button class="admin-tab-btn text-left px-4 py-2 hover:bg-gray-700" data-target="admin-chats"><i class="fas fa-comments w-6"></i> User Chats</button>
+            <div class="w-64 bg-gray-900 text-white flex flex-col">
+                <div class="p-5 border-b border-gray-700 text-center font-bold text-xl tracking-wider">OMP ADMIN</div>
+                <div class="flex-1 py-4 flex flex-col gap-1 px-2">
+                    <button class="admin-tab-btn active text-left px-4 py-3 rounded hover:bg-gray-800 transition" data-target="admin-products"><i class="fas fa-box w-6"></i> Products</button>
+                    <button class="admin-tab-btn text-left px-4 py-3 rounded hover:bg-gray-800 transition" data-target="admin-orders"><i class="fas fa-shopping-bag w-6"></i> Orders</button>
+                    <button class="admin-tab-btn text-left px-4 py-3 rounded hover:bg-gray-800 transition" data-target="admin-settings"><i class="fas fa-cog w-6"></i> Settings</button>
+                    <button class="admin-tab-btn text-left px-4 py-3 rounded hover:bg-gray-800 transition" data-target="admin-chats"><i class="fas fa-comments w-6"></i> User Chats</button>
                 </div>
                 <button id="admin-logout-btn" class="p-4 border-t border-gray-700 text-left hover:bg-red-600 transition"><i class="fas fa-sign-out-alt w-6"></i> Logout</button>
             </div>
@@ -254,57 +419,57 @@
                 
                 <!-- Products Tab -->
                 <div id="admin-products" class="admin-tab-content">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Manage Products</h2>
-                        <button id="btn-open-add-product" class="bg-green-600 text-white px-4 py-2 rounded font-bold shadow hover:bg-green-700"><i class="fas fa-plus"></i> Add Product</button>
+                    <div class="flex justify-between items-center mb-6 bg-white p-4 rounded shadow-sm border-l-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-gray-800">Manage Products</h2>
+                        <button id="btn-open-add-product" class="bg-blue-600 text-white px-4 py-2 rounded font-bold shadow hover:bg-blue-700"><i class="fas fa-plus"></i> Add Product</button>
                     </div>
 
                     <!-- Add/Edit Form (Hidden) -->
-                    <div id="product-form-container" class="bg-white p-4 rounded shadow mb-6 hidden">
-                        <h3 id="form-title" class="text-xl font-bold mb-4 border-b pb-2">Notun Product Add Korun</h3>
+                    <div id="product-form-container" class="bg-white p-6 rounded shadow-md mb-6 hidden border-t-4 border-green-500">
+                        <h3 id="form-title" class="text-xl font-bold mb-4 border-b pb-2">Add New Product</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input type="hidden" id="prod-id">
-                            <div><label class="block text-sm font-bold">Name</label><input type="text" id="prod-name" class="w-full border p-2 rounded"></div>
-                            <div><label class="block text-sm font-bold">Category</label><input type="text" id="prod-category" class="w-full border p-2 rounded" placeholder="e.g. Electronics"></div>
+                            <div><label class="block text-sm font-bold text-gray-700">Product Name</label><input type="text" id="prod-name" class="w-full border p-2 rounded focus:outline-blue-500"></div>
+                            <div><label class="block text-sm font-bold text-gray-700">Category</label><input type="text" id="prod-category" class="w-full border p-2 rounded focus:outline-blue-500" placeholder="e.g. Electronics, Fashion"></div>
                             <div>
-                                <label class="block text-sm font-bold">Fake Price (MRP)</label>
-                                <input type="number" id="prod-fake-price" class="w-full border p-2 rounded">
+                                <label class="block text-sm font-bold text-gray-700">MRP (Fake Price)</label>
+                                <input type="number" id="prod-fake-price" class="w-full border p-2 rounded focus:outline-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold">Original Price (Selling)</label>
-                                <input type="number" id="prod-real-price" class="w-full border p-2 rounded">
+                                <label class="block text-sm font-bold text-gray-700">Selling Price (Real Price)</label>
+                                <input type="number" id="prod-real-price" class="w-full border p-2 rounded focus:outline-blue-500">
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-bold">Description</label>
-                                <textarea id="prod-desc" rows="3" class="w-full border p-2 rounded"></textarea>
+                                <label class="block text-sm font-bold text-gray-700">Description</label>
+                                <textarea id="prod-desc" rows="3" class="w-full border p-2 rounded focus:outline-blue-500"></textarea>
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-bold">Images (Max 1MB base64 converting automatically)</label>
-                                <input type="file" id="prod-images" multiple accept="image/*" class="w-full border p-2 rounded">
-                                <div id="prod-images-preview" class="flex gap-2 mt-2 overflow-x-auto"></div>
+                                <label class="block text-sm font-bold text-gray-700">Images (Auto converted to Base64 compressed)</label>
+                                <input type="file" id="prod-images" multiple accept="image/*" class="w-full border p-2 rounded bg-gray-50">
+                                <div id="prod-images-preview" class="flex gap-2 mt-2 overflow-x-auto p-2 bg-gray-50 rounded min-h-[80px]"></div>
                             </div>
                             <div>
-                                <label class="flex items-center gap-2 cursor-pointer font-bold text-sm mt-4">
-                                    <input type="checkbox" id="prod-available" checked class="w-5 h-5"> Available for Sale
+                                <label class="flex items-center gap-2 cursor-pointer font-bold text-sm mt-4 text-gray-700">
+                                    <input type="checkbox" id="prod-available" checked class="w-5 h-5 text-blue-600 rounded focus:ring-0"> Product is Available for Sale
                                 </label>
                             </div>
                         </div>
-                        <div class="mt-4 flex gap-2">
-                            <button id="save-product-btn" class="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700">Save Product</button>
-                            <button id="cancel-product-btn" class="bg-gray-400 text-white px-6 py-2 rounded font-bold hover:bg-gray-500">Cancel</button>
+                        <div class="mt-6 flex gap-3 border-t pt-4">
+                            <button id="save-product-btn" class="bg-green-600 text-white px-8 py-2 rounded font-bold hover:bg-green-700 shadow">Save Product</button>
+                            <button id="cancel-product-btn" class="bg-gray-400 text-white px-8 py-2 rounded font-bold hover:bg-gray-500 shadow">Cancel</button>
                         </div>
                     </div>
 
                     <!-- Products Table -->
-                    <div class="bg-white rounded shadow overflow-hidden">
-                        <table class="w-full text-left">
-                            <thead class="bg-gray-200">
+                    <div class="bg-white rounded shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-gray-100 border-b">
                                 <tr>
-                                    <th class="p-3">Image</th>
-                                    <th class="p-3">Name</th>
-                                    <th class="p-3">Price</th>
-                                    <th class="p-3">Status</th>
-                                    <th class="p-3 text-center">Action</th>
+                                    <th class="p-3 font-semibold text-gray-600">Image</th>
+                                    <th class="p-3 font-semibold text-gray-600">Name & Category</th>
+                                    <th class="p-3 font-semibold text-gray-600">Price</th>
+                                    <th class="p-3 font-semibold text-gray-600">Status</th>
+                                    <th class="p-3 font-semibold text-gray-600 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-product-list" class="divide-y">
@@ -316,45 +481,54 @@
 
                 <!-- Orders Tab -->
                 <div id="admin-orders" class="admin-tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">Manage Orders</h2>
+                    <div class="bg-white p-4 rounded shadow-sm border-l-4 border-purple-500 mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Manage Customer Orders</h2>
+                    </div>
                     <div id="admin-order-list" class="space-y-4">
                         <!-- Orders -->
-                        <p>Loading orders...</p>
+                        <p class="text-gray-500 bg-white p-4 rounded shadow-sm">Loading orders...</p>
                     </div>
                 </div>
 
                 <!-- Settings Tab -->
                 <div id="admin-settings" class="admin-tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">Website Settings</h2>
-                    <div class="bg-white p-6 rounded shadow mb-6">
-                        <h3 class="font-bold mb-2">Change Site Logo</h3>
-                        <input type="file" id="setting-logo" accept="image/*" class="border p-2 w-full mb-2">
-                        <button id="save-logo-btn" class="bg-blue-600 text-white px-4 py-2 rounded">Upload Logo</button>
+                    <div class="bg-white p-4 rounded shadow-sm border-l-4 border-gray-500 mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Website Settings</h2>
                     </div>
-                    <div class="bg-white p-6 rounded shadow">
-                        <h3 class="font-bold mb-2">Home Page Banners (Upload Multiple)</h3>
-                        <input type="file" id="setting-banners" multiple accept="image/*" class="border p-2 w-full mb-2">
-                        <button id="save-banners-btn" class="bg-green-600 text-white px-4 py-2 rounded">Upload Banners</button>
-                        <div id="banner-preview-admin" class="flex gap-2 mt-4 overflow-x-auto"></div>
+                    <div class="bg-white p-6 rounded shadow-sm mb-6 border">
+                        <h3 class="font-bold mb-3 text-lg border-b pb-2">Change Site Logo</h3>
+                        <div class="flex items-center gap-4">
+                            <input type="file" id="setting-logo" accept="image/*" class="border p-2 w-full max-w-md bg-gray-50 rounded">
+                            <button id="save-logo-btn" class="bg-blue-600 text-white px-6 py-2 rounded font-bold hover:bg-blue-700 shadow">Update Logo</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded shadow-sm border">
+                        <h3 class="font-bold mb-3 text-lg border-b pb-2">Home Page Banners (Upload Multiple)</h3>
+                        <input type="file" id="setting-banners" multiple accept="image/*" class="border p-2 w-full max-w-md bg-gray-50 rounded mb-3">
+                        <button id="save-banners-btn" class="bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-700 shadow block">Update Banners</button>
+                        <div id="banner-preview-admin" class="flex gap-2 mt-4 overflow-x-auto p-2 bg-gray-100 rounded min-h-[100px]"></div>
                     </div>
                 </div>
 
                 <!-- Chats Tab -->
-                <div id="admin-chats" class="admin-tab-content hidden h-[80vh] flex flex-col bg-white rounded shadow">
-                    <h2 class="text-2xl font-bold p-4 border-b">User Messages</h2>
+                <div id="admin-chats" class="admin-tab-content hidden h-[80vh] flex flex-col bg-white rounded shadow-sm border">
+                    <h2 class="text-xl font-bold p-4 border-b bg-gray-50">Customer Support Messages</h2>
                     <div class="flex flex-1 overflow-hidden">
                         <!-- User List -->
-                        <div id="admin-chat-users" class="w-1/3 border-r overflow-y-auto bg-gray-50">
+                        <div id="admin-chat-users" class="w-1/3 border-r overflow-y-auto bg-white divide-y">
                             <!-- Users list -->
                         </div>
                         <!-- Chat Box -->
-                        <div class="w-2/3 flex flex-col">
-                            <div id="admin-chat-history" class="flex-1 p-4 overflow-y-auto flex flex-col gap-2">
-                                <p class="text-gray-400 text-center mt-10">Kono user select korun chat korar jonne.</p>
+                        <div class="w-2/3 flex flex-col bg-gray-50">
+                            <div id="admin-chat-history" class="flex-1 p-4 overflow-y-auto flex flex-col gap-3">
+                                <div class="flex items-center justify-center h-full text-gray-400 flex-col">
+                                    <i class="fas fa-comments text-4xl mb-2"></i>
+                                    <p>Select a user to view chat history.</p>
+                                </div>
                             </div>
-                            <div class="p-3 border-t flex gap-2">
-                                <input type="text" id="admin-chat-input" disabled placeholder="Reply likhun..." class="flex-1 border p-2 rounded">
-                                <button id="admin-chat-send" disabled class="bg-blue-600 text-white px-4 rounded"><i class="fas fa-paper-plane"></i></button>
+                            <div class="p-3 border-t bg-white flex gap-2">
+                                <input type="text" id="admin-chat-input" disabled placeholder="Type a reply..." class="flex-1 border p-2 rounded focus:outline-blue-500">
+                                <button id="admin-chat-send" disabled class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded font-bold shadow"><i class="fas fa-paper-plane"></i> Send</button>
                             </div>
                         </div>
                     </div>
@@ -367,7 +541,6 @@
 
     <!-- Firebase Scripts -->
     <script type="module">
-        // Firebase initialize kora hocche (Apnar dewa config)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, onSnapshot, doc, updateDoc, deleteDoc, setDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -389,11 +562,11 @@
         // State Variables
         let products = [];
         let cart = [];
-        let wishlist = [];
+        let wishlist = []; // Array of product IDs (strings)
         let currentUser = null;
         let siteSettings = { logo: '', banners: [] };
         
-        // Image Base64 Converter with Heavy Compression (Max 1MB jate Firestore e fit hoy)
+        // Base64 Converter
         const fileToBase64 = (file) => {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -403,7 +576,7 @@
                     img.src = e.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const MAX_SIZE = 800; // max resolution
+                        const MAX_SIZE = 800;
                         let width = img.width;
                         let height = img.height;
                         if (width > height && width > MAX_SIZE) {
@@ -417,17 +590,24 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        // Convert directly to heavy compressed JPEG
                         resolve(canvas.toDataURL('image/jpeg', 0.6)); 
                     };
                 };
             });
         };
 
-        // DOM Elements
+        // Helpers
         const E = (id) => document.getElementById(id);
+        
+        // Expose functions globally for inline HTML onclicks
+        window.toggleWishlist = toggleWishlist;
+        window.updateQty = updateQty;
+        window.editProduct = editProduct;
+        window.deleteProduct = deleteProduct;
+        window.updateOrderStatus = updateOrderStatus;
+        window.addToCart = addToCart;
 
-        // Router & View Management
+        // Router
         function handleRouting() {
             const hash = window.location.hash;
             document.querySelectorAll('.view-section, .page-view').forEach(el => {
@@ -445,14 +625,19 @@
                 if (hash.startsWith('#product-')) {
                     E('view-product-details').classList.remove('hidden');
                     renderProductDetails(hash.split('-')[1]);
+                    window.scrollTo(0,0);
                 } else if (hash === '#cart') {
                     E('view-cart').classList.remove('hidden');
                     renderCart();
                 } else if (hash === '#checkout') {
                     E('view-checkout').classList.remove('hidden');
+                    prefillCheckoutAddress();
                 } else if (hash === '#wishlist') {
                     E('view-wishlist').classList.remove('hidden');
                     renderWishlist();
+                } else if (hash === '#orders') {
+                    E('view-orders').classList.remove('hidden');
+                    renderUserOrders();
                 } else {
                     E('view-home').classList.remove('hidden');
                 }
@@ -460,12 +645,23 @@
         }
         window.addEventListener('hashchange', handleRouting);
 
+        // Logo click logic (20 times for Admin)
+        let logoClickCount = 0;
+        E('logo-container').onclick = () => {
+            logoClickCount++;
+            if (logoClickCount >= 20) {
+                logoClickCount = 0;
+                window.location.hash = '#OMP-admin';
+            } else {
+                window.location.hash = ''; // Always navigates home on normal click
+            }
+        };
+
         // ==================== AUTHENTICATION ====================
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 E('auth-text').innerText = user.displayName ? user.displayName.split(' ')[0] : 'User';
-                // Load user data
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const data = userDoc.data();
@@ -474,14 +670,15 @@
                 }
                 updateCartCount();
                 initChatListener();
+                if(window.location.hash === '#orders') renderUserOrders();
             } else {
                 currentUser = null;
-                E('auth-text').innerText = 'Log In';
+                E('auth-text').innerText = 'Login';
                 cart = [];
                 wishlist = [];
                 updateCartCount();
-                // signInAnonymously(auth); // Fallback if needed, but user wants Google login
             }
+            if(window.location.hash === '#wishlist') renderWishlist();
         });
 
         E('auth-btn-container').addEventListener('click', () => {
@@ -489,7 +686,7 @@
                 const provider = new GoogleAuthProvider();
                 signInWithPopup(auth, provider).catch(err => alert("Login Error: " + err.message));
             } else {
-                if(confirm("Log out korte chan?")) signOut(auth);
+                if(confirm("Do you want to log out?")) signOut(auth);
             }
         });
 
@@ -504,8 +701,7 @@
         }
 
 
-        // ==================== DATA FETCHING (Realtime) ====================
-        // Settings (Logo & Banner)
+        // ==================== DATA FETCHING ====================
         onSnapshot(doc(db, "settings", "global"), (d) => {
             if(d.exists()) {
                 siteSettings = d.data();
@@ -514,15 +710,15 @@
             }
         });
 
-        // Products
         onSnapshot(collection(db, "products"), (snapshot) => {
             products = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
             renderHomeProducts();
             renderAdminProducts();
             if(window.location.hash.startsWith('#product-')) {
-                renderProductDetails(window.location.hash.split('-')[1]); // re-render real-time
+                renderProductDetails(window.location.hash.split('-')[1]);
             }
-            renderCart(); // update cart prices
+            if(window.location.hash === '#cart') renderCart();
+            if(window.location.hash === '#wishlist') renderWishlist();
         });
 
         // ==================== RENDER STORE UI ====================
@@ -533,43 +729,41 @@
             }
         }
         
-        // Simple Carousel Logic
-        let bannerScroll = 0;
-        E('next-banner').onclick = () => { 
-            const c = E('banner-container'); 
-            c.scrollBy({left: c.clientWidth, behavior: 'smooth'}); 
-        };
-        E('prev-banner').onclick = () => { 
-            const c = E('banner-container'); 
-            c.scrollBy({left: -c.clientWidth, behavior: 'smooth'}); 
-        };
+        E('next-banner').onclick = () => { const c = E('banner-container'); c.scrollBy({left: c.clientWidth, behavior: 'smooth'}); };
+        E('prev-banner').onclick = () => { const c = E('banner-container'); c.scrollBy({left: -c.clientWidth, behavior: 'smooth'}); };
 
         function renderHomeProducts() {
             const grid = E('product-grid');
             if(products.length === 0) {
-                grid.innerHTML = '<p class="col-span-full text-center py-10">Kono product pawa jayni.</p>';
+                grid.innerHTML = '<p class="col-span-full text-center py-10">No products found.</p>';
                 return;
             }
             grid.innerHTML = products.map(p => {
                 const img = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/200';
+                const isWished = wishlist.includes(p.id);
                 return `
-                <div class="bg-white border rounded shadow-sm hover:shadow-md transition cursor-pointer relative flex flex-col group" onclick="window.location.hash='#product-${p.id}'">
-                    <button class="absolute top-2 right-2 text-gray-300 hover:text-red-500 z-10" onclick="event.stopPropagation(); toggleWishlist('${p.id}')">
-                        <i class="${wishlist.includes(p.id) ? 'fas text-red-500' : 'far'} fa-heart"></i>
+                <div class="bg-white border rounded shadow-sm hover:shadow-md transition relative flex flex-col group p-3">
+                    <button class="absolute top-3 right-3 text-gray-300 hover:text-red-500 z-10 text-xl transition" onclick="event.stopPropagation(); toggleWishlist('${p.id}')">
+                        <i class="${isWished ? 'fas text-red-500' : 'far'} fa-heart"></i>
                     </button>
-                    <div class="h-48 p-4 flex items-center justify-center bg-white relative">
+                    <div class="h-40 flex items-center justify-center bg-white relative cursor-pointer" onclick="window.location.hash='#product-${p.id}'">
                         <img src="${img}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300">
-                        ${!p.available ? '<div class="absolute inset-0 bg-white/70 flex items-center justify-center font-bold text-red-600 text-lg">Not Available</div>' : ''}
+                        ${!p.available ? '<div class="absolute inset-0 bg-white/70 flex items-center justify-center font-bold text-red-600 text-lg">Out of Stock</div>' : ''}
                     </div>
-                    <div class="p-3 border-t flex-1 flex flex-col">
-                        <div class="text-sm text-gray-500 truncate">${p.category || 'General'}</div>
-                        <div class="font-semibold text-gray-800 line-clamp-2 min-h-[40px]">${p.name}</div>
-                        <div class="mt-auto pt-2 flex items-center gap-2">
+                    <div class="mt-3 flex flex-col flex-1 cursor-pointer" onclick="window.location.hash='#product-${p.id}'">
+                        <div class="font-semibold text-gray-800 line-clamp-2 text-sm sm:text-base leading-tight min-h-[40px] hover:text-brand">${p.name}</div>
+                        <div class="text-xs text-gray-500 mt-1">${p.category || 'General'}</div>
+                        <div class="mt-2 flex items-center gap-2">
                             <span class="font-bold text-lg">₹${p.realPrice}</span>
                             <span class="text-xs text-gray-500 line-through">₹${p.fakePrice}</span>
-                            <span class="text-xs text-green-600 font-bold">${p.discount}% off</span>
+                            <span class="text-xs text-green-600 font-bold">${p.discount}% OFF</span>
                         </div>
                     </div>
+                    <button class="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded shadow flex justify-center items-center gap-2 transition disabled:opacity-50 disabled:cursor-not-allowed" 
+                        ${!p.available ? 'disabled' : ''} 
+                        onclick="addToCart('${p.id}')">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
                 </div>
                 `;
             }).join('');
@@ -577,7 +771,7 @@
 
         function renderProductDetails(id) {
             const p = products.find(x => x.id === id);
-            if(!p) { alert("Product not found"); window.history.back(); return; }
+            if(!p) { window.history.back(); return; }
 
             E('pd-category').innerText = p.category || '';
             E('pd-title').innerText = p.name;
@@ -594,10 +788,15 @@
                 p.images.forEach(img => {
                     const t = document.createElement('img');
                     t.src = img;
-                    t.className = "w-16 h-16 object-contain border p-1 rounded cursor-pointer hover:border-blue-500 shrink-0 bg-white";
-                    t.onclick = () => E('pd-main-img').src = img;
+                    t.className = "w-16 h-16 object-contain border-2 border-transparent hover:border-brand p-1 rounded cursor-pointer shrink-0 bg-white transition";
+                    t.onclick = (e) => {
+                        E('pd-main-img').src = img;
+                        Array.from(thumbs.children).forEach(c => c.classList.remove('border-brand'));
+                        e.target.classList.add('border-brand');
+                    };
                     thumbs.appendChild(t);
                 });
+                if(thumbs.children[0]) thumbs.children[0].classList.add('border-brand');
             } else {
                 E('pd-main-img').src = 'https://via.placeholder.com/400';
             }
@@ -608,7 +807,7 @@
             const status = E('pd-stock-status');
             
             if(!p.available) {
-                status.innerHTML = '<span class="text-red-600">Ei product ti ekhon available nei.</span>';
+                status.innerHTML = '<span class="text-red-600">Currently Out of Stock.</span>';
                 btnCart.disabled = true; btnCart.classList.add('opacity-50', 'cursor-not-allowed');
                 btnBuy.disabled = true; btnBuy.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
@@ -617,22 +816,27 @@
                 btnBuy.disabled = false; btnBuy.classList.remove('opacity-50', 'cursor-not-allowed');
             }
 
-            // Wishlist Btn
-            const wBtn = E('pd-btn-wishlist');
-            wBtn.innerHTML = wishlist.includes(p.id) ? '<i class="fas fa-heart text-red-500"></i> Wishlist theke Soran' : '<i class="far fa-heart"></i> Wishlist e Add Korun';
-            wBtn.onclick = () => toggleWishlist(p.id);
+            // Wishlist Btn inside Product Details
+            const wIcon = E('pd-wishlist-icon');
+            wIcon.innerHTML = wishlist.includes(p.id) ? '<i class="fas fa-heart text-red-500 shadow-sm bg-white rounded-full p-2"></i>' : '<i class="far fa-heart bg-white shadow-sm rounded-full p-2 text-gray-400"></i>';
+            wIcon.onclick = () => toggleWishlist(p.id);
 
             // Add Actions
-            btnCart.onclick = () => { addToCart(p.id); alert("Cart e jog kora hoyeche!"); };
+            btnCart.onclick = () => { addToCart(p.id); alert("Added to Cart successfully!"); };
             btnBuy.onclick = () => { addToCart(p.id); window.location.hash = '#cart'; };
         }
 
         // ==================== CART & WISHLIST LOGIC ====================
         function toggleWishlist(pid) {
-            if(!currentUser) return alert("Log in korun!");
-            if(wishlist.includes(pid)) wishlist = wishlist.filter(id => id !== pid);
-            else wishlist.push(pid);
+            if(!currentUser) return alert("Please Login to add items to Wishlist!");
+            if(wishlist.includes(pid)) {
+                wishlist = wishlist.filter(id => id !== pid); // Exact string match removal
+            } else {
+                wishlist.push(pid);
+            }
             saveUserData();
+            
+            // Re-render UI components silently based on state
             renderHomeProducts();
             if(window.location.hash.startsWith('#product-')) renderProductDetails(pid);
             if(window.location.hash === '#wishlist') renderWishlist();
@@ -640,22 +844,32 @@
 
         function renderWishlist() {
             const grid = E('wishlist-grid');
+            E('wishlist-count').innerText = wishlist.length;
             const items = products.filter(p => wishlist.includes(p.id));
-            if(items.length === 0) { grid.innerHTML = '<p class="col-span-full">Wishlist faka!</p>'; return; }
+            
+            if(items.length === 0) { 
+                grid.innerHTML = '<div class="p-10 text-center text-gray-500 flex flex-col items-center"><img src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/mywishlist-empty_39f7a5.png" class="w-40 mb-4"><p class="text-lg font-bold">Empty Wishlist</p><p class="mb-4">You have no items in your wishlist. Start adding!</p></div>'; 
+                return; 
+            }
+
             grid.innerHTML = items.map(p => `
-                <div class="bg-white border rounded shadow relative">
-                    <img src="${p.images?.[0]}" class="w-full h-40 object-contain p-2">
-                    <div class="p-2 border-t text-sm font-bold truncate">${p.name}</div>
-                    <div class="p-2 flex justify-between">
-                        <span>₹${p.realPrice}</span>
-                        <button onclick="toggleWishlist('${p.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
+                <div class="flex gap-4 p-4 hover:bg-gray-50 transition items-center">
+                    <img src="${p.images?.[0]}" class="w-24 h-24 object-contain bg-white cursor-pointer" onclick="window.location.hash='#product-${p.id}'">
+                    <div class="flex-1 cursor-pointer" onclick="window.location.hash='#product-${p.id}'">
+                        <div class="text-lg font-semibold hover:text-brand">${p.name}</div>
+                        <div class="flex items-center gap-3 mt-1">
+                            <span class="text-xl font-bold text-black">₹${p.realPrice}</span>
+                            <span class="text-gray-500 line-through text-sm">₹${p.fakePrice}</span>
+                            <span class="text-green-600 font-bold text-sm">${p.discount}% OFF</span>
+                        </div>
                     </div>
+                    <button onclick="toggleWishlist('${p.id}')" class="text-gray-400 hover:text-red-500 p-2 text-xl" title="Remove"><i class="fas fa-trash"></i></button>
                 </div>
             `).join('');
         }
 
         function addToCart(pid) {
-            if(!currentUser) return alert("Log in korun order korar jonno!");
+            if(!currentUser) return alert("Please Login to add items to Cart!");
             const existing = cart.find(i => i.pid === pid);
             if(existing) existing.qty += 1;
             else cart.push({pid, qty: 1});
@@ -665,15 +879,16 @@
 
         function updateCartCount() {
             const el = E('cart-count');
-            if(cart.length > 0) {
-                el.innerText = cart.length;
+            let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            if(totalQty > 0) {
+                el.innerText = totalQty;
                 el.classList.remove('hidden');
             } else {
                 el.classList.add('hidden');
             }
         }
 
-        window.updateQty = (pid, change) => {
+        function updateQty(pid, change) {
             const item = cart.find(i => i.pid === pid);
             if(item) {
                 item.qty += change;
@@ -682,39 +897,53 @@
                 renderCart();
                 updateCartCount();
             }
-        };
+        }
 
         function renderCart() {
             const container = E('cart-items');
             if(cart.length === 0) {
-                container.innerHTML = '<div class="text-center py-10">Cart faka! Kichu add korun.</div>';
+                container.innerHTML = '<div class="p-10 text-center text-gray-500 flex flex-col items-center"><img src="https://rukminim2.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90" class="w-48 mb-4"><p class="text-lg font-bold">Your cart is empty!</p><p class="mb-4">Add items to it now.</p><button onclick="window.location.hash=\'\'" class="bg-brand text-white px-8 py-2 rounded shadow">Shop Now</button></div>';
                 E('cart-total-fake').innerText = '₹0';
                 E('cart-total-discount').innerText = '-₹0';
                 E('cart-total-real').innerText = '₹0';
                 E('cart-savings').innerText = '₹0';
-                E('btn-checkout').style.display = 'none';
+                E('cart-item-count').innerText = '0';
+                E('cart-footer').style.display = 'none';
                 return;
             }
-            E('btn-checkout').style.display = 'block';
+            E('cart-footer').style.display = 'flex';
 
             let fakeTotal = 0, realTotal = 0;
+            let totalItems = 0;
             container.innerHTML = cart.map(item => {
                 const p = products.find(x => x.id === item.pid);
-                if(!p) return ''; // Product deleted
+                if(!p) return ''; // Product deleted from db
                 fakeTotal += p.fakePrice * item.qty;
                 realTotal += p.realPrice * item.qty;
+                totalItems += item.qty;
                 return `
-                <div class="flex flex-col sm:flex-row border rounded p-4 gap-4 items-center">
-                    <img src="${p.images?.[0]}" class="h-24 w-24 object-contain">
-                    <div class="flex-1">
-                        <div class="font-bold text-lg line-clamp-1">${p.name}</div>
-                        <div class="text-gray-500 text-sm">₹${p.realPrice} (Total: ₹${p.realPrice * item.qty})</div>
-                        ${!p.available ? '<div class="text-red-500 font-bold text-sm">Item out of stock! Pabe na.</div>' : ''}
+                <div class="flex flex-col sm:flex-row border-b p-4 gap-6 relative">
+                    <div class="flex flex-col items-center gap-3 w-full sm:w-32 shrink-0">
+                        <img src="${p.images?.[0]}" class="h-24 w-24 object-contain">
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateQty('${p.id}', -1)" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center font-bold bg-white hover:bg-gray-100 disabled:opacity-30" ${item.qty<=1?'disabled':''}>-</button>
+                            <span class="font-semibold px-2 border w-12 text-center bg-white h-8 flex items-center justify-center">${item.qty}</span>
+                            <button onclick="updateQty('${p.id}', 1)" class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center font-bold bg-white hover:bg-gray-100">+</button>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="updateQty('${p.id}', -1)" class="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center font-bold text-lg">-</button>
-                        <span class="font-bold w-4 text-center">${item.qty}</span>
-                        <button onclick="updateQty('${p.id}', 1)" class="w-8 h-8 rounded-full border border-gray-400 flex items-center justify-center font-bold text-lg">+</button>
+                    <div class="flex-1">
+                        <div class="font-semibold text-lg line-clamp-2 hover:text-brand cursor-pointer" onclick="window.location.hash='#product-${p.id}'">${p.name}</div>
+                        <div class="text-sm text-gray-500 mt-1">${p.category || 'General'}</div>
+                        <div class="flex items-center gap-3 mt-3">
+                            <span class="font-bold text-xl text-black">₹${p.realPrice}</span>
+                            <span class="text-gray-500 line-through text-sm">₹${p.fakePrice}</span>
+                            <span class="text-green-600 font-bold text-sm">${p.discount}% Off</span>
+                        </div>
+                        ${!p.available ? '<div class="text-red-500 font-bold text-sm mt-2">Currently out of stock</div>' : ''}
+                        
+                        <div class="mt-4 flex gap-6">
+                            <button onclick="let c=confirm('Remove this item?'); if(c) { cart=cart.filter(i=>i.pid!=='${p.id}'); saveUserData(); renderCart(); updateCartCount(); }" class="font-semibold hover:text-brand uppercase text-sm">Remove</button>
+                        </div>
                     </div>
                 </div>`;
             }).join('');
@@ -723,6 +952,7 @@
             E('cart-total-discount').innerText = `-₹${fakeTotal - realTotal}`;
             E('cart-total-real').innerText = `₹${realTotal}`;
             E('cart-savings').innerText = `₹${fakeTotal - realTotal}`;
+            E('cart-item-count').innerText = totalItems;
         }
 
         E('btn-checkout').onclick = () => {
@@ -730,17 +960,32 @@
                 const p = products.find(x => x.id === i.pid);
                 return p && !p.available;
             });
-            if(hasUnavailable) return alert("Kichu item stock e nei. Se gulo cart theke soran.");
+            if(hasUnavailable) return alert("Some items in your cart are out of stock. Please remove them to proceed.");
             window.location.hash = '#checkout';
             E('chk-amount').innerText = E('cart-total-real').innerText;
         };
 
         // ==================== CHECKOUT LOGIC ====================
+        async function prefillCheckoutAddress() {
+            if(!currentUser) return;
+            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+            if(userDoc.exists() && userDoc.data().savedAddress) {
+                const addr = userDoc.data().savedAddress;
+                E('chk-fname').value = addr.fname || '';
+                E('chk-lname').value = addr.lname || '';
+                E('chk-phone').value = addr.phone || '';
+                E('chk-state').value = addr.state || '';
+                E('chk-city').value = addr.city || '';
+                E('chk-pincode').value = addr.pincode || '';
+                E('chk-address').value = addr.address || '';
+                E('chk-save-address').checked = true;
+            }
+        }
+
         E('checkout-form').onsubmit = async (e) => {
             e.preventDefault();
             if(!currentUser) return;
             
-            // Generate full order details array
             const orderItems = cart.map(item => {
                 const p = products.find(x => x.id === item.pid);
                 return {
@@ -753,11 +998,23 @@
             });
 
             const total = parseInt(E('chk-amount').innerText.replace('₹', ''));
+            const addressData = {
+                fname: E('chk-fname').value,
+                lname: E('chk-lname').value,
+                phone: E('chk-phone').value,
+                state: E('chk-state').value,
+                city: E('chk-city').value,
+                pincode: E('chk-pincode').value,
+                address: E('chk-address').value
+            };
+
+            const fullAddressString = `${addressData.address}, ${addressData.city}, ${addressData.state} - ${addressData.pincode}`;
+
             const orderData = {
                 userId: currentUser.uid,
-                customerName: E('chk-name').value,
-                phone: E('chk-phone').value,
-                address: E('chk-address').value,
+                customerName: `${addressData.fname} ${addressData.lname}`,
+                phone: addressData.phone,
+                address: fullAddressString,
                 items: orderItems,
                 total: total,
                 status: 'Pending',
@@ -765,16 +1022,80 @@
             };
 
             try {
+                // Save Order
                 await addDoc(collection(db, "orders"), orderData);
-                cart = []; // clear cart
+                
+                // Save Address if checked
+                if(E('chk-save-address').checked) {
+                    await setDoc(doc(db, "users", currentUser.uid), { savedAddress: addressData }, { merge: true });
+                } else {
+                    await setDoc(doc(db, "users", currentUser.uid), { savedAddress: null }, { merge: true }); // clear if unchecked
+                }
+
+                cart = []; 
                 saveUserData();
-                alert("Order successfully kora hoyeche!");
-                window.location.hash = '';
+                alert("Order Placed Successfully!");
+                window.location.hash = '#orders';
                 e.target.reset();
             } catch(err) {
                 alert("Order failed: " + err.message);
             }
         };
+
+        // ==================== USER ORDERS ====================
+        let userOrdersUnsubscribe = null;
+        function renderUserOrders() {
+            if(!currentUser) return;
+            if(userOrdersUnsubscribe) userOrdersUnsubscribe();
+            
+            // Simple query without complex indexes, filter in JS as per instructions
+            userOrdersUnsubscribe = onSnapshot(collection(db, "orders"), (snap) => {
+                const allOrders = snap.docs.map(d=>({id: d.id, ...d.data()}));
+                const myOrders = allOrders
+                    .filter(o => o.userId === currentUser.uid)
+                    .sort((a,b) => new Date(b.date) - new Date(a.date));
+                
+                const list = E('user-orders-list');
+                if(myOrders.length === 0) {
+                    list.innerHTML = '<div class="bg-white p-8 text-center text-gray-500 shadow-sm rounded">No orders found.</div>';
+                    return;
+                }
+
+                list.innerHTML = myOrders.map(o => `
+                    <div class="bg-white rounded shadow-sm border p-4 sm:p-6 mb-4">
+                        <div class="flex justify-between items-start border-b pb-4 mb-4">
+                            <div>
+                                <div class="font-bold text-gray-800">Order ID: <span class="font-normal font-mono text-sm">${o.id}</span></div>
+                                <div class="text-sm text-gray-500">Placed on ${new Date(o.date).toLocaleDateString()}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-lg">Total: ₹${o.total}</div>
+                                <span class="inline-block mt-1 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider ${
+                                    o.status === 'Pending' ? 'bg-orange-100 text-orange-800' :
+                                    o.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
+                                    o.status === 'Out for Delivery' ? 'bg-purple-100 text-purple-800' :
+                                    'bg-green-100 text-green-800'
+                                }">${o.status}</span>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            ${o.items.map(i => `
+                                <div class="flex items-center gap-4">
+                                    <img src="${i.image}" class="w-16 h-16 object-contain border p-1 rounded">
+                                    <div class="flex-1">
+                                        <div class="font-semibold line-clamp-1">${i.name}</div>
+                                        <div class="text-sm text-gray-500">Qty: ${i.qty} &times; ₹${i.price}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-4 pt-4 border-t text-sm">
+                            <span class="font-bold text-gray-700">Delivery Address:</span> <span class="text-gray-600">${o.address}</span>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
 
 
         // ==================== CHAT SYSTEM (User Side) ====================
@@ -786,17 +1107,17 @@
         function initChatListener() {
             if(chatUnsubscribe) chatUnsubscribe();
             if(!currentUser) return;
-            const q = collection(db, "chats", currentUser.uid, "messages"); // nested structure for simplicity
+            const q = collection(db, "chats", currentUser.uid, "messages");
             chatUnsubscribe = onSnapshot(q, (snap) => {
                 const msgs = snap.docs.map(d=>d.data()).sort((a,b) => a.timestamp - b.timestamp);
                 const cBox = E('chat-messages');
-                cBox.innerHTML = '<div class="self-start bg-gray-200 text-black px-3 py-1.5 rounded-lg max-w-[80%]">Namaskar! Apnake kivabe sahajjo korte pari?</div>';
+                cBox.innerHTML = '<div class="self-start bg-white border text-black px-3 py-2 rounded-lg rounded-tl-none shadow-sm max-w-[80%]">Hello! How can we help you today?</div>';
                 msgs.forEach(m => {
                     const div = document.createElement('div');
                     if(m.sender === 'user') {
-                        div.className = "self-end bg-blue-600 text-white px-3 py-1.5 rounded-lg max-w-[80%]";
+                        div.className = "self-end bg-brand text-white px-3 py-2 rounded-lg rounded-tr-none shadow-sm max-w-[80%]";
                     } else {
-                        div.className = "self-start bg-gray-200 text-black px-3 py-1.5 rounded-lg max-w-[80%]";
+                        div.className = "self-start bg-white border text-black px-3 py-2 rounded-lg rounded-tl-none shadow-sm max-w-[80%]";
                     }
                     div.innerText = m.text;
                     cBox.appendChild(div);
@@ -808,12 +1129,11 @@
         E('chat-send-btn').onclick = sendChatMessage;
         E('chat-input').onkeypress = (e) => { if(e.key === 'Enter') sendChatMessage(); }
         async function sendChatMessage() {
-            if(!currentUser) return alert("Chat korar jonne aage Log In korun!");
+            if(!currentUser) return alert("Please Login to start chatting!");
             const input = E('chat-input');
             const text = input.value.trim();
             if(!text) return;
             
-            // Add user metadata to root document if not exists to list users in Admin
             await setDoc(doc(db, "chats", currentUser.uid), {
                 userId: currentUser.uid,
                 name: currentUser.displayName,
@@ -825,6 +1145,7 @@
             });
             input.value = '';
         }
+
 
         // ==========================================================
         // ==================== ADMIN PANEL LOGIC ====================
@@ -847,7 +1168,7 @@
                 adminAuthOk = true;
                 checkAdminAuth();
             } else {
-                alert("Bhul Password!");
+                alert("Incorrect Password!");
             }
         };
 
@@ -859,8 +1180,8 @@
         // Admin Tabs
         document.querySelectorAll('.admin-tab-btn').forEach(btn => {
             btn.onclick = () => {
-                document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('bg-gray-700', 'active'));
-                btn.classList.add('bg-gray-700', 'active');
+                document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('bg-gray-800', 'active'));
+                btn.classList.add('bg-gray-800', 'active');
                 
                 document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.add('hidden'));
                 E(btn.dataset.target).classList.remove('hidden');
@@ -871,23 +1192,23 @@
         let selectedBase64Images = [];
         E('btn-open-add-product').onclick = () => {
             E('product-form-container').classList.remove('hidden');
-            E('form-title').innerText = "Notun Product Add Korun";
+            E('form-title').innerText = "Add New Product";
             resetAdminForm();
         };
         E('cancel-product-btn').onclick = () => E('product-form-container').classList.add('hidden');
         
         E('prod-images').onchange = async (e) => {
-            selectedBase64Images = []; // reset for simplicity
+            selectedBase64Images = []; 
             const files = Array.from(e.target.files);
             const preview = E('prod-images-preview');
-            preview.innerHTML = 'Converting to Base64...';
+            preview.innerHTML = '<span class="text-sm text-gray-500 p-2">Compressing and Converting...</span>';
             
             for(let f of files) {
                 const b64 = await fileToBase64(f);
                 selectedBase64Images.push(b64);
             }
             
-            preview.innerHTML = selectedBase64Images.map(img => `<img src="${img}" class="h-16 border rounded">`).join('');
+            preview.innerHTML = selectedBase64Images.map(img => `<img src="${img}" class="h-16 object-contain border rounded bg-white">`).join('');
         };
 
         E('save-product-btn').onclick = async () => {
@@ -915,11 +1236,11 @@
                 } else {
                     await addDoc(collection(db, "products"), data);
                 }
-                alert("Product Save Hoyeche!");
+                alert("Product Saved Successfully!");
                 E('product-form-container').classList.add('hidden');
                 resetAdminForm();
             } catch(e) {
-                alert("Error saving: " + e.message + "\n(Image size may be too large for Firestore)");
+                alert("Error saving: " + e.message + "\n(Image payload may be too large)");
             } finally {
                 E('save-product-btn').innerText = "Save Product";
             }
@@ -938,11 +1259,11 @@
             selectedBase64Images = [];
         }
 
-        window.editProduct = (id) => {
+        function editProduct(id) {
             const p = products.find(x => x.id === id);
             if(!p) return;
             E('product-form-container').classList.remove('hidden');
-            E('form-title').innerText = "Product Edit Korun";
+            E('form-title').innerText = "Edit Product";
             E('prod-id').value = p.id;
             E('prod-name').value = p.name;
             E('prod-category').value = p.category || '';
@@ -951,26 +1272,26 @@
             E('prod-desc').value = p.description;
             E('prod-available').checked = p.available;
             selectedBase64Images = p.images || [];
-            E('prod-images-preview').innerHTML = selectedBase64Images.map(img => `<img src="${img}" class="h-16 border rounded">`).join('');
+            E('prod-images-preview').innerHTML = selectedBase64Images.map(img => `<img src="${img}" class="h-16 object-contain border rounded bg-white">`).join('');
             window.scrollTo(0,0);
-        };
+        }
 
-        window.deleteProduct = async (id) => {
-            if(confirm("Sotti ei product delete korben?")) {
+        async function deleteProduct (id) {
+            if(confirm("Are you sure you want to delete this product completely?")) {
                 await deleteDoc(doc(db, "products", id));
             }
-        };
+        }
 
         function renderAdminProducts() {
             E('admin-product-list').innerHTML = products.map(p => `
                 <tr class="bg-white hover:bg-gray-50 border-b">
-                    <td class="p-3"><img src="${p.images?.[0] || ''}" class="h-12 w-12 object-cover rounded border"></td>
-                    <td class="p-3 font-semibold">${p.name} <br><span class="text-xs text-gray-500">${p.category}</span></td>
-                    <td class="p-3">₹${p.realPrice} <span class="text-sm text-gray-400 line-through">₹${p.fakePrice}</span></td>
-                    <td class="p-3">${p.available ? '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Avail</span>' : '<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Not Avail</span>'}</td>
-                    <td class="p-3 text-center gap-2">
-                        <button onclick="editProduct('${p.id}')" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteProduct('${p.id}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                    <td class="p-3"><img src="${p.images?.[0] || ''}" class="h-12 w-12 object-contain bg-white rounded border"></td>
+                    <td class="p-3 font-semibold text-gray-800">${p.name} <br><span class="text-xs font-normal text-gray-500 bg-gray-100 px-1 rounded">${p.category}</span></td>
+                    <td class="p-3">₹${p.realPrice} <br><span class="text-xs text-gray-400 line-through">₹${p.fakePrice}</span></td>
+                    <td class="p-3">${p.available ? '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">Available</span>' : '<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold">Hidden</span>'}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="editProduct('${p.id}')" class="text-blue-600 hover:text-blue-800 mr-3 text-lg"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteProduct('${p.id}')" class="text-red-600 hover:text-red-800 text-lg"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -978,21 +1299,19 @@
 
         // Admin Orders Realtime
         function initAdminListeners() {
-            // Orders
             onSnapshot(collection(db, "orders"), (snap) => {
                 const orders = snap.docs.map(d=>({id: d.id, ...d.data()})).sort((a,b)=> new Date(b.date) - new Date(a.date));
                 renderAdminOrders(orders);
             });
 
-            // Chat Users List
             onSnapshot(collection(db, "chats"), (snap) => {
                 const usersList = E('admin-chat-users');
                 usersList.innerHTML = '';
                 snap.docs.forEach(d => {
                     const u = d.data();
                     const div = document.createElement('div');
-                    div.className = "p-3 border-b cursor-pointer hover:bg-gray-200";
-                    div.innerHTML = `<div class="font-bold">${u.name || 'User'}</div><div class="text-xs text-gray-500">${u.userId}</div>`;
+                    div.className = "p-3 border-b cursor-pointer hover:bg-gray-100 flex items-center gap-2";
+                    div.innerHTML = `<div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">${u.name?u.name[0]:'U'}</div><div><div class="font-bold text-sm">${u.name || 'User'}</div><div class="text-xs text-gray-500 truncate w-32">${u.userId}</div></div>`;
                     div.onclick = () => openAdminChat(u.userId, u.name);
                     usersList.appendChild(div);
                 });
@@ -1000,59 +1319,73 @@
         }
 
         function renderAdminOrders(orders) {
-            if(orders.length===0) { E('admin-order-list').innerHTML="Kono order nei."; return;}
+            if(orders.length===0) { E('admin-order-list').innerHTML="<div class='bg-white p-4 text-gray-500 rounded border'>No orders yet.</div>"; return;}
             E('admin-order-list').innerHTML = orders.map(o => `
-                <div class="bg-white p-4 rounded shadow border-l-4 ${o.status==='Delivered'?'border-green-500':'border-orange-500'}">
-                    <div class="flex justify-between items-start mb-2">
+                <div class="bg-white p-5 rounded shadow-sm border-l-4 ${
+                    o.status==='Delivered'?'border-green-500':
+                    o.status==='Shipped'?'border-blue-500':
+                    o.status==='Out for Delivery'?'border-purple-500':
+                    'border-orange-500'
+                }">
+                    <div class="flex justify-between items-start mb-3">
                         <div>
-                            <span class="font-bold text-lg">${o.customerName}</span> - ${o.phone}
-                            <div class="text-sm text-gray-600">${o.address}</div>
+                            <span class="font-bold text-lg text-gray-800">${o.customerName}</span> <span class="text-gray-500">- ${o.phone}</span>
+                            <div class="text-sm text-gray-600 mt-1"><i class="fas fa-map-marker-alt text-red-500 mr-1"></i> ${o.address}</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-xs text-gray-500">${new Date(o.date).toLocaleString()}</div>
-                            <div class="font-bold text-lg mt-1">Total: ₹${o.total}</div>
+                            <div class="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded inline-block">${new Date(o.date).toLocaleString()}</div>
+                            <div class="font-bold text-xl mt-2 text-black">₹${o.total}</div>
                         </div>
                     </div>
-                    <div class="border-t pt-2 mt-2">
-                        ${o.items.map(i => `<div class="text-sm text-gray-700">&bull; ${i.name} (Qty: ${i.qty}) - ₹${i.price}</div>`).join('')}
+                    <div class="border-t pt-3 bg-gray-50 p-3 rounded">
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">Order Items:</span>
+                        ${o.items.map(i => `<div class="text-sm text-gray-800 font-semibold mb-1">&bull; ${i.name} <span class="text-gray-500 font-normal">(Qty: ${i.qty})</span></div>`).join('')}
                     </div>
-                    <div class="mt-4 flex items-center justify-between">
-                        <span class="font-bold bg-gray-200 px-2 py-1 rounded">ID: ${o.id}</span>
-                        <select onchange="updateOrderStatus('${o.id}', this.value)" class="border p-1 font-bold rounded ${o.status==='Pending'?'bg-red-100':o.status==='Shipped'?'bg-yellow-100':o.status==='Out for Delivery'?'bg-blue-100':'bg-green-100'}">
-                            <option value="Pending" ${o.status==='Pending'?'selected':''}>Pending</option>
-                            <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
-                            <option value="Out for Delivery" ${o.status==='Out for Delivery'?'selected':''}>Out for Delivery</option>
-                            <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
-                        </select>
+                    <div class="mt-4 flex items-center justify-between border-t pt-4">
+                        <div class="text-xs font-mono bg-gray-100 px-2 py-1 rounded text-gray-500">ID: ${o.id}</div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-gray-600">Update Status:</span>
+                            <select onchange="updateOrderStatus('${o.id}', this.value)" class="border p-2 font-bold rounded shadow-sm focus:outline-none ${
+                                o.status==='Pending'?'bg-orange-50 text-orange-700 border-orange-200':
+                                o.status==='Shipped'?'bg-blue-50 text-blue-700 border-blue-200':
+                                o.status==='Out for Delivery'?'bg-purple-50 text-purple-700 border-purple-200':
+                                'bg-green-50 text-green-700 border-green-200'
+                            }">
+                                <option value="Pending" ${o.status==='Pending'?'selected':''}>Pending</option>
+                                <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
+                                <option value="Out for Delivery" ${o.status==='Out for Delivery'?'selected':''}>Out for Delivery</option>
+                                <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        window.updateOrderStatus = async (oid, newStatus) => {
+        async function updateOrderStatus(oid, newStatus) {
             await updateDoc(doc(db, "orders", oid), { status: newStatus });
-        };
+        }
 
 
         // Admin Settings (Banners & Logo)
         E('save-logo-btn').onclick = async () => {
             const file = E('setting-logo').files[0];
-            if(!file) return alert("Select an image!");
+            if(!file) return alert("Select an image first!");
             const b64 = await fileToBase64(file);
             await setDoc(doc(db, "settings", "global"), { logo: b64 }, {merge:true});
-            alert("Logo updated!");
+            alert("Logo updated successfully!");
         };
 
         E('save-banners-btn').onclick = async () => {
             const files = Array.from(E('setting-banners').files);
-            if(files.length === 0) return alert("Select images!");
+            if(files.length === 0) return alert("Select images first!");
             E('save-banners-btn').innerText = "Uploading...";
             let bans = [];
             for(let f of files) bans.push(await fileToBase64(f));
             
             await setDoc(doc(db, "settings", "global"), { banners: bans }, {merge:true});
-            E('save-banners-btn').innerText = "Upload Banners";
-            alert("Banners updated!");
+            E('save-banners-btn').innerText = "Update Banners";
+            alert("Banners updated successfully!");
         };
 
 
@@ -1069,11 +1402,11 @@
             adminChatUnsub = onSnapshot(collection(db, "chats", uid, "messages"), (snap) => {
                 const msgs = snap.docs.map(d=>d.data()).sort((a,b) => a.timestamp - b.timestamp);
                 const h = E('admin-chat-history');
-                h.innerHTML = `<div class="text-center font-bold text-gray-500 py-2 border-b mb-2">Chat with ${uname}</div>`;
+                h.innerHTML = `<div class="text-center font-bold text-gray-500 py-2 border-b mb-4 bg-white rounded shadow-sm">Chatting with: ${uname}</div>`;
                 msgs.forEach(m => {
                     const div = document.createElement('div');
-                    if(m.sender === 'admin') div.className = "self-end bg-green-600 text-white px-3 py-1.5 rounded-lg max-w-[80%]";
-                    else div.className = "self-start bg-gray-200 text-black px-3 py-1.5 rounded-lg max-w-[80%]";
+                    if(m.sender === 'admin') div.className = "self-end bg-blue-600 text-white px-3 py-2 rounded-lg max-w-[80%] shadow-sm rounded-tr-none";
+                    else div.className = "self-start bg-white border text-black px-3 py-2 rounded-lg max-w-[80%] shadow-sm rounded-tl-none";
                     div.innerText = m.text;
                     h.appendChild(div);
                 });
@@ -1095,7 +1428,7 @@
             input.value = '';
         }
 
-        // Initialize Router on load
+        // Initialize App
         handleRouting();
 
     </script>
